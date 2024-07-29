@@ -4,14 +4,15 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { config } from "dotenv";
 import express from "express";
+import morgan from "morgan";
 import { MongoDb } from "./utils/db.js";
-import morgan from "morgan"
 
 
 
 //imports routes
 
 import { errorMiddleware } from "./middlewares/error.js";
+import companyRoutes from "./routes/company.js";
 import userRoutes from "./routes/user.js";
 
 config();
@@ -33,7 +34,9 @@ app.use(cookieParser())
 app.use(morgan("dev"))
 
 //routes
-app.use("/api/v1/user",userRoutes)
+app.use("/api/v1/user",userRoutes);
+app.use("/api/v1/company",companyRoutes)
+
 
 // to check the error after route
 app.use(errorMiddleware)

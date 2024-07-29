@@ -103,7 +103,7 @@ export const logout = TryCatch(async (req, res, next) => {
 });
 
 
-export const updateProfile = TryCatch(async (req: NewRequest, res, next) => {
+export const updateProfile = TryCatch(async (req: NewRequest<{}>, res, next) => {
     const id = req.id;
     const { fullName, email, phoneNumber, profile, role } = req.body
 
