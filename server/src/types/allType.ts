@@ -31,9 +31,25 @@ export type CompanyReqBody = {
   logo?: string;
 };
 
-export interface NewRequest<CompanyReqBody> extends Request {
+export type JobReqBody={
+  title:string;
+  jobType:string;
+  discription:string;
+  requirments?:string
+  experienceLevel:string;
+  location?:string;
+  salary:string;
+  created_by:string;
+  position:string;
+  company:string;
+  applications?:string[] | string;
+
+
+}
+export interface NewRequest<CompanyReqBody,JobReqBody> extends Request {
   id?: string;
   data?:CompanyReqBody
+  job?:JobReqBody
 }
 
 export type ControllerType = (

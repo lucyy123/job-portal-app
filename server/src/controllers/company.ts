@@ -6,7 +6,7 @@ import ErrorHandler from "../utils/errorHandlerClass.js";
 
 export const registerCompany = TryCatch(
   async (
-    req: NewRequest<CompanyReqBody>,
+    req: NewRequest<CompanyReqBody,{}>,
     res: Response,
     next: NextFunction
   ) => {
@@ -37,10 +37,10 @@ export const registerCompany = TryCatch(
 );
 
 export const getUserCompaneis = TryCatch(
-  async (req: NewRequest<{}>, res, next) => {
+  async (req: NewRequest<{},{}>, res, next) => {
     const UserId = req.id;
 
-    const userCompanies = await Company.find({ });
+    const userCompanies = await Company.find({});
     if (!userCompanies) return next(new ErrorHandler("No Company Found", 404));
 
     return res.status(200).json({
@@ -65,7 +65,7 @@ return res.status(200).json({
 })
 });
 
-export const updateCompany = TryCatch(async(req:NewRequest<CompanyReqBody>,res,next)=>{
+export const updateCompany = TryCatch(async(req:NewRequest<CompanyReqBody,{}>,res,next)=>{
 const {id}= req.params;
 const { name, discription, logo, website } = req.body;
 const updatedData = {
