@@ -8,6 +8,7 @@ import { MongoDb } from "./utils/db.js";
 //imports routes
 import { errorMiddleware } from "./middlewares/error.js";
 import companyRoutes from "./routes/company.js";
+import jobRoutes from "./routes/job.js";
 import userRoutes from "./routes/user.js";
 config();
 const app = express();
@@ -26,6 +27,7 @@ app.use(morgan("dev"));
 //routes
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/company", companyRoutes);
+app.use("/api/v1/job", jobRoutes);
 // to check the error after route
 app.use(errorMiddleware);
 app.listen(port, () => {
