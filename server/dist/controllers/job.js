@@ -39,7 +39,7 @@ export const getAllJobs = TryCatch(async (req, res, next) => {
             { discription: { $regex: key, $options: "i" } },
         ],
     };
-    const allJob = await Job.find(condition);
+    const allJob = await Job.find(condition).populate("company").sort({ createdAt: -1 });
     if (!allJob)
         return next(new ErrorHandler("Job Not Found", 404));
     return res.status(200).json({

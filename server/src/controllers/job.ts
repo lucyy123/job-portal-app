@@ -62,7 +62,7 @@ export const getAllJobs = TryCatch(
       ],
     };
 
-    const allJob = await Job.find(condition)
+    const allJob = await Job.find(condition).populate("company").sort({createdAt:-1})
 
     if (!allJob) return next(new ErrorHandler("Job Not Found", 404));
 

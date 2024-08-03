@@ -44,12 +44,19 @@ export type JobReqBody={
   company:string;
   applications?:string[] | string;
 
-
 }
+
+
+
+export type StatusReqBody={
+  status:'pending'|'accepted'|'rejected';
+}
+
 export interface NewRequest<CompanyReqBody,JobReqBody> extends Request {
   id?: string;
-  data?:CompanyReqBody
+  company?:CompanyReqBody
   job?:JobReqBody
+
 }
 
 export type ControllerType = (
