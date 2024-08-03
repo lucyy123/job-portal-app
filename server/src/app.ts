@@ -16,6 +16,7 @@ import { errorMiddleware } from "./middlewares/error.js";
 import companyRoutes from "./routes/company.js";
 import jobRoutes from "./routes/job.js";
 import userRoutes from "./routes/user.js";
+import applicationRoutes from "./routes/application.js"
 
 config();
 const app=express();
@@ -39,6 +40,7 @@ app.use(morgan("dev"))
 app.use("/api/v1/user",userRoutes);
 app.use("/api/v1/company",companyRoutes);
 app.use("/api/v1/job",jobRoutes);
+app.use("/api/v1/applications",applicationRoutes)
 
 
 // to check the error after route

@@ -5,7 +5,7 @@ import ErrorHandler from "../utils/errorHandlerClass.js";
 
 
 export const isUserAuthenticated = async (
-  req: NewRequest<{}>,
+  req: NewRequest<{},{}>,
   res: Response,
   next: NextFunction
 ) => {
