@@ -1,4 +1,5 @@
 import { lazy, Suspense } from "react";
+import { Toaster } from "react-hot-toast";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 // lazy imporst
@@ -21,6 +22,7 @@ const App = () => {
         <Route path="/signup" element={<SignUp />} />
       </Routes>
       </Suspense>
+      <Toaster position="bottom-right"/>
     </Router>
   );
 };
