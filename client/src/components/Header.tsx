@@ -1,14 +1,14 @@
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import {
-    AppBar,
-    Avatar,
-    Box,
-    Button,
-    Paper,
-    Stack,
-    Toolbar,
-    Typography,
+  AppBar,
+  Avatar,
+  Box,
+  Button,
+  Paper,
+  Stack,
+  Toolbar,
+  Typography,
 } from "@mui/material";
 
 import { Link } from "react-router-dom";
@@ -43,7 +43,7 @@ const Header = () => {
               Job
               <span
                 style={{
-                  color: "red",
+                  color: "rgb(243, 16, 16)",
                 }}
               >
                 Connect
@@ -74,7 +74,7 @@ const Header = () => {
               variant="h6"
               fontWeight={"bold"}
               fontSize={"1.1rem"}
-              color={"#rgb(73, 73, 73)"}
+              color={"rgb(73, 73, 73)"}
             >
               Jobs
             </Typography>
@@ -84,7 +84,7 @@ const Header = () => {
               variant="h6"
               fontWeight={"bold"}
               fontSize={"1.1rem"}
-              color={"#rgb(73, 73, 73)"}
+              color={"rgb(73, 73, 73)"}
             >
               Browse
             </Typography>
@@ -117,16 +117,19 @@ const Header = () => {
                   >
                     {/* Avatar + user name + user bio */}
                     <Stack direction={"row"} gap={"0.6rem"}>
-                        <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
-
-                      <Avatar
-                        alt="user Image"
-                        src={userImage}
-                        sx={{ width: 35, height: 35 }}
+                      <Box
+                        display={"flex"}
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                      >
+                        <Avatar
+                          alt="user Image"
+                          src={userImage}
+                          sx={{ width: 35, height: 35 }}
                         />
-                        </Box>
+                      </Box>
                       <Stack>
-                        <Typography fontSize={"1.1rem"}  variant="body1">
+                        <Typography fontSize={"1.1rem"} variant="body1">
                           {userName}
                         </Typography>
                         <Typography
@@ -139,43 +142,62 @@ const Header = () => {
                       </Stack>
                     </Stack>
                     {/* user icon + user Profile*/}
-                        <Link to={"/viewProfile"}>
-                    <Stack direction={"row"} gap={"1.2rem"} display={"flex"} alignItems={"center"}>
-                    <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
-                      <AccountCircleOutlinedIcon
-                        style={{                           
-                            width: 30,
-                            height: 30,
-                            color: "gray",
-                        }}
-                        />
+                    <Link to={"/viewProfile"}>
+                      <Stack
+                        direction={"row"}
+                        gap={"1.2rem"}
+                        display={"flex"}
+                        alignItems={"center"}
+                      >
+                        <Box
+                          display={"flex"}
+                          justifyContent={"center"}
+                          alignItems={"center"}
+                        >
+                          <AccountCircleOutlinedIcon
+                            style={{
+                              width: 30,
+                              height: 30,
+                              color: "gray",
+                            }}
+                          />
                         </Box>
-                   
-                  
 
-                        <Typography fontSize={"0.95rem"} variant="body1"  color={"#000"} >
+                        <Typography
+                          fontSize={"0.95rem"}
+                          variant="body1"
+                          color={"#000"}
+                        >
                           View Profile
                         </Typography>
-                     
-
-                    
-                    </Stack>
-                    {/* logout icon + logout*/}
+                      </Stack>
+                      {/* logout icon + logout*/}
                     </Link>
-                    <Stack direction={"row"} gap={"1.2rem"} display={"flex"} alignItems={"center"}>
-                    <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
-
-                        
-                      <LogoutOutlinedIcon
-                        style={{
+                    <Stack
+                      direction={"row"}
+                      gap={"1.2rem"}
+                      display={"flex"}
+                      alignItems={"center"}
+                    >
+                      <Box
+                        display={"flex"}
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                      >
+                        <LogoutOutlinedIcon
+                          style={{
                             width: 30,
                             height: 30,
                             color: "gray",
-                        }}
+                          }}
                         />
-                        </Box>
+                      </Box>
                       <Stack>
-                        <Typography fontSize={"0.95rem"} variant="body1" color={"#000"}>
+                        <Typography
+                          fontSize={"0.95rem"}
+                          variant="body1"
+                          color={"#000"}
+                        >
                           Log Out
                         </Typography>
                       </Stack>
@@ -184,40 +206,39 @@ const Header = () => {
                 </Paper>
               </dialog>
             </Box>
-          ):(
+          ) : (
             <Box
               sx={{
                 display: "flex",
                 justifyContent: "start",
                 alignItems: "center",
                 gap: "0.6rem",
-
               }}
             >
-                <Link to="/signup">
-              <Button variant="outlined" style={{
-                    textTransform:"none",
-                    fontWeight:"bold"
-              }}>
-                Signup
-              </Button>
-                </Link>
-       
+              <Link to="/signup">
                 <Button
-                  variant="contained"
-                  
-                 
-                  sx={{
-                    color: "white",
-                    textTransform:"none",
-                    fontWeight:"bold"
+                  variant="outlined"
+                  style={{
+                    textTransform: "none",
+                    fontWeight: "bold",
                   }}
                 >
-                  Login
+                  Signup
                 </Button>
-       
+              </Link>
+
+              <Button
+                variant="contained"
+                sx={{
+                  color: "white",
+                  textTransform: "none",
+                  fontWeight: "bold",
+                }}
+              >
+                Login
+              </Button>
             </Box>
-          ) }
+          )}
         </Box>
       </Toolbar>
     </AppBar>

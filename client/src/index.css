@@ -7,6 +7,24 @@ html,
 
 a {
   text-decoration: none;
-  color:rgb(73, 73, 73)
+  /* color:rgb(73, 73, 73) */
+  /* color:rgb(243, 16, 16) */
+  /* font-weight: ; */
 }
 
+label {
+  font-weight: 500;
+}
+
+/* 
+::-webkit-file-upload-button {
+  background-color: "#007BFF";
+  color: "#FFFFFF";
+  border: "none";
+  padding: "8px 16px";
+  border-radius: "4px";
+  cursor: "pointer";
+}
+::-webkit-file-upload-button:hover {
+  background-color: "#0056b3";
+} */
