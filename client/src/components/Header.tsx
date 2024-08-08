@@ -9,15 +9,22 @@ import {
   Stack,
   Toolbar,
   Typography,
+  useTheme,
 } from "@mui/material";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useState } from "react";
 import userImage from "../assets/images/palestineFlag.jpg";
+import { headerMenu } from "../utils/constants";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const handleLogin = () => {
+    navigate("/login");
+  };
 
   const isUser = false;
   const userName = "Monis Khan";
@@ -38,12 +45,17 @@ const Header = () => {
         }}
       >
         <Box>
-          <Link to="/">
+          <Link
+            to="/"
+            style={{
+              cursor: "pointer",
+            }}
+          >
             <Typography variant="h5" fontWeight={"bold"} color={"#000"}>
               Job
               <span
                 style={{
-                  color: "rgb(243, 16, 16)",
+                  color: theme.palette.secondary.main,
                 }}
               >
                 Connect
@@ -59,36 +71,20 @@ const Header = () => {
             alignItems: "center",
           }}
         >
-          <Link to={"/home"}>
-            <Typography
-              variant="h6"
-              fontWeight={"bold"}
-              fontSize={"1.1rem"}
-              color={"rgb(73, 73, 73)"}
-            >
-              Home
-            </Typography>
-          </Link>
-          <Link to={"/jobs"}>
-            <Typography
-              variant="h6"
-              fontWeight={"bold"}
-              fontSize={"1.1rem"}
-              color={"rgb(73, 73, 73)"}
-            >
-              Jobs
-            </Typography>
-          </Link>
-          <Link to={"/browse"}>
-            <Typography
-              variant="h6"
-              fontWeight={"bold"}
-              fontSize={"1.1rem"}
-              color={"rgb(73, 73, 73)"}
-            >
-              Browse
-            </Typography>
-          </Link>
+          {/* ----------------- H E A D E R   M E N U   I T E M S  */}
+          {headerMenu.map((ele) => (
+            <Link to={ele.link}>
+              <Typography
+                variant="h6"
+                fontWeight={"bold"}
+                fontSize={"1.1rem"}
+                color={theme.palette.text.secondary}
+              >
+                {ele.name}
+              </Typography>
+            </Link>
+          ))}
+
           {isUser ? (
             <Box>
               <Avatar
@@ -228,6 +224,7 @@ const Header = () => {
               </Link>
 
               <Button
+                onClick={handleLogin}
                 variant="contained"
                 sx={{
                   color: "white",
