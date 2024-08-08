@@ -73,7 +73,7 @@ const Header = () => {
         >
           {/* ----------------- H E A D E R   M E N U   I T E M S  */}
           {headerMenu.map((ele) => (
-            <Link to={ele.link}>
+            <Link key={`${ele.name}+1.1`} to={ele.link}>
               <Typography
                 variant="h6"
                 fontWeight={"bold"}
