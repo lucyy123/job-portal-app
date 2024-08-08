@@ -7,7 +7,7 @@ import "./index.css";
 import { store } from "./redux/store.ts";
 
 import { CssBaseline } from "@mui/material";
-import { theme } from "./theme.ts";
+import { theme } from "./utils/theme.ts";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

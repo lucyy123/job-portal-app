@@ -1,9 +1,10 @@
+
 /// <reference types="vite/client" />
 export type User={
-    fullName: string;
+    fullName?: string;
     email: string;
     password: string;
-    phoneNumber: string;
+    phoneNumber?: string;
     profile?: UserProfileType;
     role: string;
   };
@@ -13,17 +14,34 @@ export type User={
     skills?: string[];
     resume?: string;
     resumeOriginalName?: string;
-    company?: string;
+    company?: null;
     profilePhoto?: string;
   };
 
-  export type UserResponseMessage={
+  export type UserResponseMessage<User>={
     message: string,
-    success: boolean
+    success: boolean,
+    user?:User
   }
 
+export type Userlogn={
+  email: string;
+  password: string;
+  role:string;
+}
 
 export type UserReducerInitialState={
     loading:boolean;
     user:User | null
+}
+
+export type UserLogin={
+  email:string,
+  password:string,
+  role:string
+}
+
+export interface HeaderMenuType{
+name:string,
+link:string
 }

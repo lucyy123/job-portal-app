@@ -1,3 +1,4 @@
+import { LoadingButton } from "@mui/lab";
 import {
   Box,
   Button,
@@ -12,7 +13,10 @@ import {
   Typography,
 } from "@mui/material";
 import { ChangeEvent, FormEvent, useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import Loader from "../components/Loader";
+import { useRegisterMutation } from "../redux/api/userApi";
 import { User } from "../vite-env";
 
 const initailUser = {
@@ -26,21 +30,31 @@ const initailUser = {
     skills: [],
     resume: "",
     resumeOriginalName: "",
-    company: "",
+    company: null,
     profilePhoto: "",
   },
 };
 
 const SignUp = () => {
+  const [register, { isError, isLoading }] = useRegisterMutation();
   const [user, setUser] = useState<User>(initailUser);
   const navigate = useNavigate();
 
   const { email, profile, fullName, password, phoneNumber, role } = user;
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    navigate("/login");
-    setUser(initailUser);
+
+    try {
+      const res = await register(user).unwrap();
+      toast.success(res.message);
+      navigate("/login");
+      setUser(initailUser);
+    } catch (error) {
+      console.log("error:", error);
+      console.log("isError:", isError);
+      toast.error("SignUp Failed");
+    }
   };
 
   const handlechange = (
@@ -54,6 +68,8 @@ const SignUp = () => {
       [name]: String(value),
     }));
   };
+
+  if (isLoading) return <Loader />;
 
   return (
     <Container
@@ -217,23 +233,36 @@ const SignUp = () => {
                 </Box>
               </Stack>
             </Stack>
-            <Button
-              disabled={
-                fullName == "" ||
-                email == "" ||
-                role == "" ||
-                phoneNumber == "" ||
-                password == ""
-              }
-              type="submit"
-              variant="contained"
-              sx={{
-                m: "2rem 0rem",
-                textTransform: "none",
-              }}
-            >
-              Signup
-            </Button>
+
+            {isLoading && isLoading ? (
+              <LoadingButton
+                loading
+                loadingPosition="center"
+                variant="contained"
+                fullWidth={false}
+                sx={{ bgcolor: "primary.main" }}
+              >
+                <span>loading...</span>
+              </LoadingButton>
+            ) : (
+              <Button
+                disabled={
+                  fullName == "" ||
+                  email == "" ||
+                  role == "" ||
+                  phoneNumber == "" ||
+                  password == ""
+                }
+                type="submit"
+                variant="contained"
+                sx={{
+                  m: "2rem 0rem",
+                  textTransform: "none",
+                }}
+              >
+                Signup
+              </Button>
+            )}
           </Stack>
         </form>
       </Paper>

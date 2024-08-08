@@ -8,9 +8,11 @@ const Header = lazy(()=>import("./components/Header"));
 const Loader = lazy(()=>import("./components/Loader"))
 const SignUp =lazy(()=>import("./pages/SignUp"))
 const Home =lazy(()=>import("./pages/Home"))
+const Login = lazy(()=>import("./pages/Login"))
 
 
 const App = () => {
+  
   return (
 
 
@@ -20,6 +22,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path= "/login" element={<Login/>} />
       </Routes>
       </Suspense>
       <Toaster position="bottom-right"/>
