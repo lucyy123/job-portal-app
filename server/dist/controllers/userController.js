@@ -63,8 +63,8 @@ export const login = TryCatch(async (req, res, next) => {
     };
     res.status(200).cookie("token", token, cookiesOptions).json({
         message: `Login Successfully, Welcome ${loginUser.fullName}`,
+        success: true,
         user,
-        success: true
     });
 });
 export const logout = TryCatch(async (req, res, next) => {

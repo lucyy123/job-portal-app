@@ -7,3 +7,6 @@ export const headerMenu:HeaderMenuType[] = [
     { name: "Browse", link: "/browse" },
 
 ]
+
+
+export const carouselContent=["Full Stack Developer","Frontend Developer","Backend Developer","React Js Developer"]

@@ -1,11 +1,11 @@
 import { Search } from "@mui/icons-material";
 import {
-    Button,
-    Container,
-    Paper,
-    Stack,
-    Typography,
-    useTheme,
+  Button,
+  Container,
+  Paper,
+  Stack,
+  Typography,
+  useTheme,
 } from "@mui/material";
 
 const HeroSection = () => {
@@ -50,7 +50,7 @@ const HeroSection = () => {
         <Typography variant="subtitle2" fontWeight={600} color={"grey"}>
           Empowering Your Career Journey, One Opportunity at a Time.
         </Typography>
-
+{/* ----------------------- Search bar ------------------------ */}
         <Stack width={"100%"}  direction={"row"} justifyContent={"center"}>
           <Paper elevation={2} sx={{
             borderRadius:"25px 0 0 25px",
@@ -60,8 +60,9 @@ const HeroSection = () => {
             <input style={{
                 border:"none",
                 outline:"none",
+                background:"transparent",
                 width:"100%",
-                padding:"1rem 0.5rem",
+                padding:"1rem",
                 borderRadius:"inherit",
             }}  placeholder="Find Your Dream Job..." />
           </Paper>
