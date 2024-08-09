@@ -85,8 +85,8 @@ export const login = TryCatch(
 
         res.status(200).cookie("token", token, cookiesOptions).json({
             message: `Login Successfully, Welcome ${loginUser.fullName}`,
+            success: true,
             user,
-            success: true
         })
 
     }

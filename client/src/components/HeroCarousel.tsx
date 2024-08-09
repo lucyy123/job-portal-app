@@ -1,4 +1,4 @@
-import { ArrowBack, ArrowForward ,MoreHoriz} from '@mui/icons-material';
+import { ArrowBack, ArrowForward, MoreHoriz } from '@mui/icons-material';
 import { Box, Button, Stack } from "@mui/material";
 import { useEffect, useRef, useState } from 'react';
 import { carouselContent } from "../utils/constants";
@@ -58,14 +58,22 @@ const checkScrollPosition = () => {
         
 
   return (
-    <Box display={"flex"} justifyContent={"center"} alignItems={"center"}  >
+    <Box display={"flex"} justifyContent={"center"} alignItems={"center"}  margin={"0rem 2rem"} >
       {/* ----------------- C A R O U S E L  C O N T E N T S------------------ */}
-      <Stack direction={"row"} width={"60%"}>
+      <Stack direction={"row"} alignItems={"center"} width={"60%"}>
         {/* ----------------- PREVIOUSE BUTTON------------------ */}
-        <Button disabled={isAtStart
+        <Button variant='text' sx={{
+
+        }} disabled={isAtStart
 }
         onClick={()=> handleScroll("left")}>
-          <ArrowBack></ArrowBack>
+          <ArrowBack sx={{
+          width:"1.5rem",
+          height:"1.5rem",
+          borderRadius:"50%",
+          margin:"0.7rem",
+          border:"1px solid grey"
+          }}></ArrowBack>
         </Button>
         {/* ----------------- CAROUSEL ITEMS------------------ */}
 
@@ -86,7 +94,6 @@ const checkScrollPosition = () => {
             <Button key={ele}  variant="outlined" sx={{
                 textTransform:"none",
                 width: "250px !important",
-              
                 marginLeft:"1rem",
                 flexShrink:0
             }}>{ele}</Button>
@@ -98,8 +105,14 @@ const checkScrollPosition = () => {
      
 
         {
-            isAtEnd ? (<Button><MoreHoriz></MoreHoriz></Button>) :(<Button  disabled={isAtEnd} onClick={()=> handleScroll("right")}>
-            <ArrowForward></ArrowForward> 
+            isAtEnd ? (<Button><MoreHoriz></MoreHoriz></Button>) :(<Button  disabled={isAtEnd}  onClick={()=> handleScroll("right")}>
+            <ArrowForward sx={{
+               width:"1.5rem",
+               height:"1.5rem",
+               borderRadius:"50%",
+               margin:"0.7rem",
+               border:"1px solid grey"
+            }}></ArrowForward> 
          </Button>)
         }
 

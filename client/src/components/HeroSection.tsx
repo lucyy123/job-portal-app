@@ -1,11 +1,11 @@
 import { Search } from "@mui/icons-material";
 import {
-    Button,
-    Container,
-    Paper,
-    Stack,
-    Typography,
-    useTheme,
+  Button,
+  Container,
+  Paper,
+  Stack,
+  Typography,
+  useTheme,
 } from "@mui/material";
 
 const HeroSection = () => {
@@ -60,6 +60,7 @@ const HeroSection = () => {
             <input style={{
                 border:"none",
                 outline:"none",
+                background:"transparent",
                 width:"100%",
                 padding:"1rem 0.5rem",
                 borderRadius:"inherit",

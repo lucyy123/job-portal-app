@@ -37,7 +37,8 @@ const schema = new mongoose.Schema({
         },
         company: {
             type: mongoose.Types.ObjectId,
-            ref: "Company"
+            ref: "Company",
+            default: null
         },
         profilePhoto: {
             type: String,
