@@ -87,8 +87,9 @@ const checkScrollPosition = () => {
             overflow:"hidden",
             whiteSpace:"nowrap",
             padding:"0.5rem 1rem",
-            scrollBehavior:"smooth"
-        
+            scrollBehavior:"smooth",
+borderLeft:"1px solid grey"     ,   
+borderRight:"1px solid grey"        
           }}
         > { carouselContent.map((ele) => (
             <Button key={ele}  variant="outlined" sx={{
