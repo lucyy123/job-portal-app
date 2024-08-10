@@ -1,5 +1,9 @@
 
 /// <reference types="vite/client" />
+
+import { ReactNode } from "react";
+
+
 export type User={
     fullName?: string;
     email: string;
@@ -44,4 +48,19 @@ export type UserLogin={
 export interface HeaderMenuType{
 name:string,
 link:string
+}
+
+export type FilterOptionsType={
+  filterType:string;
+  filters:string []
+}
+
+export type  AppliedJobsTableRowType = {
+
+id:number;
+date:string;
+jobRole:string;
+company:string;
+status: ReactNode
+
 }
