@@ -13,8 +13,9 @@ const Footer = () => {
       style={{
         display: "flex",
         padding: "0rem 4rem",
-        marginTop: "4rem",
+        marginTop: "6rem",
         marginBottom: "2rem",
+        backgroundColor: "aliceblue",
       }}
     >
       {/* copyright */}

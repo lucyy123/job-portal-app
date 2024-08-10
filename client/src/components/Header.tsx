@@ -17,6 +17,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import userImage from "../assets/images/palestineFlag.jpg";
 import { headerMenu } from "../utils/constants";
+import { useSelector } from "react-redux";
+import { UserReducerInitialState } from "../vite-env";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -26,7 +28,10 @@ const Header = () => {
     navigate("/login");
   };
 
-  const isUser = false;
+  const { user } = useSelector(
+    (state: { user: UserReducerInitialState }) => state.user
+  );
+
   const userName = "Monis Khan";
   return (
     <AppBar
@@ -34,7 +39,7 @@ const Header = () => {
       elevation={0}
       sx={{
         backgroundColor: "white",
-        padding: "0rem 9rem",
+        padding: "0rem 7rem",
       }}
     >
       <Toolbar
@@ -85,7 +90,7 @@ const Header = () => {
             </Link>
           ))}
 
-          {isUser ? (
+          {user ? (
             <Box>
               <Avatar
                 onClick={() => setIsOpen((pre) => !pre)}

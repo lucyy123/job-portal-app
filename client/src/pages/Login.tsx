@@ -121,9 +121,8 @@ const Login = () => {
               direction={"row"}
               display={"flex"}
               justifyContent={"space-between"}
-              // paddingRight={"2rem"}
             >
-              <FormControl style={{}}>
+              <FormControl >
                 <RadioGroup
                   onChange={handlechange}
                   value={role}

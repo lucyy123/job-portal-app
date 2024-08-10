@@ -50,25 +50,34 @@ const HeroSection = () => {
         <Typography variant="subtitle2" fontWeight={600} color={"grey"}>
           Empowering Your Career Journey, One Opportunity at a Time.
         </Typography>
-{/* ----------------------- Search bar ------------------------ */}
-        <Stack width={"100%"}  direction={"row"} justifyContent={"center"}>
-          <Paper elevation={2} sx={{
-            borderRadius:"25px 0 0 25px",
-                width:"60%",
-                my:"auto"
-            }} >
-            <input style={{
-                border:"none",
-                outline:"none",
-                background:"transparent",
-                width:"100%",
-                padding:"1rem",
-                borderRadius:"inherit",
-            }}  placeholder="Find Your Dream Job..." />
+        {/* ----------------------- Search bar ------------------------ */}
+        <Stack width={"100%"} direction={"row"} justifyContent={"center"}>
+          <Paper
+            elevation={2}
+            sx={{
+              borderRadius: "25px 0 0 25px",
+              width: "60%",
+              my: "auto",
+            }}
+          >
+            <input
+              style={{
+                border: "none",
+                outline: "none",
+                background: "transparent",
+                width: "100%",
+                padding: "1rem",
+                borderRadius: "inherit",
+              }}
+              placeholder="Find Your Dream Job..."
+            />
           </Paper>
-          <Button variant="contained" sx={{
-            borderRadius:"0 25px 25px 0"
-          }}>
+          <Button
+            variant="contained"
+            sx={{
+              borderRadius: "0 25px 25px 0",
+            }}
+          >
             <Search></Search>
           </Button>
         </Stack>
