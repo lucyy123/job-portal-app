@@ -6,11 +6,11 @@ import { ReactNode } from "react";
 
 export type User={
     fullName?: string;
-    email: string;
-    password: string;
+    email?: string;
+    password?: string;
     phoneNumber?: string;
     profile?: UserProfileType;
-    role: string;
+    role?: string;
   };
 
   export type UserProfileType = {
@@ -64,3 +64,5 @@ company:string;
 status: ReactNode
 
 }
+
+

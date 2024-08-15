@@ -5,17 +5,25 @@ import {
   Box,
   Button,
   Container,
+  IconButton,
   Paper,
   Stack,
   Typography,
 } from "@mui/material";
-import { GridColDef } from '@mui/x-data-grid';
+import { GridColDef } from "@mui/x-data-grid";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import userAvatar from "../assets/images/palestineFlag.jpg";
+import JobEditDialog from "../components/JobEditDialog";
+import Loader from "../components/Loader";
 import TableComponent from "../components/Table";
-import { skills } from "../utils/constants";
-import { AppliedJobsTableRowType } from "../vite-env";
+import { AppliedJobsTableRowType, UserReducerInitialState } from "../vite-env";
 const Profile = () => {
+
+  const [isOpen,setIsOpen]=useState<boolean>(false)
+const {user,loading} = useSelector((state:{user:UserReducerInitialState})=>state.user)
+
 
   const rows: AppliedJobsTableRowType[] = [
     {
@@ -44,28 +52,38 @@ const Profile = () => {
       date: "26-11-2024",
       jobRole: "Software  Developer",
       company: "Asus",
-      status: "Rejected"
+      status: "Rejected",
     },
   ];
 
+  const columns: GridColDef[] = [
+    { field: "date", headerName: "Date", width: 100, flex: 1 },
+    { field: "jobRole", headerName: "Job Role", width: 70, flex: 1 },
+    { field: "company", headerName: "Company", width: 70, flex: 1 },
+    {
+      field: "status",
+      headerName: "Status",
+      width: 70,
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <Button
+            variant="contained"
+            color={params.value == "Accepted" ? "success" : "error"}
+            sx={{
+              textTransform: "none",
+              fontSize: "0.7rem",
+              borderRadius: "25px",
+            }}
+          >
+            {params.value}
+          </Button>
+        );
+      },
+    },
+  ];
 
-  const columns:GridColDef[] = [
-
-    { field: 'date', headerName: 'Date', width: 100,flex:1 },
-    { field: 'jobRole', headerName: 'Job Role', width: 70 ,flex:1 },
-    { field: 'company', headerName: 'Company', width: 70 ,flex:1 },
-    { field: 'status', headerName: 'Status', width: 70,flex:1 ,  renderCell: (params) => {
-      return (
-        <Button  variant="contained" color={params.value=="Accepted"?"success":"error"} sx={{
-          textTransform:"none",
-          fontSize:"0.7rem",
-          borderRadius:"25px"
-        }} >
-          {params.value}
-        </Button>
-      );
-    }, },
-  ]
+  loading &&  <Loader></Loader>
 
   return (
     <Container
@@ -113,7 +131,7 @@ const Profile = () => {
           <Box flex={1}>
             <Stack justifyContent={"center"}>
               <Typography variant="h4" fontSize={"1.4rem"} fontWeight={"bold"}>
-                Monis Khan
+                {user?.fullName}
               </Typography>
               <Typography
                 sx={{
@@ -127,10 +145,7 @@ const Profile = () => {
                 }}
               >
                 {" "}
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Delectus libero illo eligendi commodi. Totam, in quos vitae
-                deserunt possimus nesciunt at similique aut unde qui animi? Eius
-                illum consequuntur velit?
+               {user?.profile?.bio}
               </Typography>
             </Stack>
           </Box>
@@ -140,25 +155,29 @@ const Profile = () => {
             display={"flex"}
             justifyContent={"center"}
             alignItems={"start"}
+            
           >
-            <EditOutlinedIcon
+            <IconButton onClick={()=>setIsOpen((pre)=>!pre)}>
+
+            <EditOutlinedIcon 
               sx={{
                 width: "2.3rem",
                 height: "2.3rem",
               }}
-            ></EditOutlinedIcon>
+              ></EditOutlinedIcon>
+              </IconButton>
           </Box>
         </Stack>
 
-        {/* -------------contacts and social links---------------- */}
+        {/* -------------contacts and social links ==> EMAIL + MOBILE NUMBER---------------- */}
         <Box marginTop={"1rem"}>
           <Stack direction={"row"} alignItems={"center"} gap={"0.6rem"}>
             {" "}
-            <EmailOutlined></EmailOutlined>monisykhan@gmail.com
+            <EmailOutlined></EmailOutlined>{user?.email}
           </Stack>
           <Stack direction={"row"} alignItems={"center"} gap={"0.6rem"} mt={1}>
             {" "}
-            <ContactPhoneOutlined></ContactPhoneOutlined>9168830388
+            <ContactPhoneOutlined></ContactPhoneOutlined>{user?.phoneNumber}
           </Stack>
         </Box>
 
@@ -167,11 +186,12 @@ const Profile = () => {
         <Box>
           <Typography variant="subtitle2" fontWeight={"bold"}>
             {" "}
-            Skills{" "}
+            Skills {" "}
           </Typography>
           <Stack direction={"row"} gap={"0.3rem"} marginTop={"0.6rem"}>
-            {skills.map((ele) => (
+            {user?.profile?.skills?.map((ele,idx) => (
               <Button
+              key={idx}
                 variant="contained"
                 sx={{
                   textTransform: "none",
@@ -210,9 +230,15 @@ const Profile = () => {
           Applied Jobs{" "}
         </Typography>
         <Box>
-          <TableComponent rows={rows} columns={columns} height="15rem" widgth="100%" />
+          <TableComponent
+            rows={rows}
+            columns={columns}
+            height="15rem"
+            widgth="100%"
+          />
         </Box>
       </Box>
+      <JobEditDialog isOpen={isOpen} handleOpen={setIsOpen}/>
     </Container>
   );
 };
