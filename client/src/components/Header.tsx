@@ -15,9 +15,9 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import userImage from "../assets/images/palestineFlag.jpg";
 import { headerMenu } from "../utils/constants";
-import { useSelector } from "react-redux";
 import { UserReducerInitialState } from "../vite-env";
 
 const Header = () => {
@@ -143,7 +143,7 @@ const Header = () => {
                       </Stack>
                     </Stack>
                     {/* user icon + user Profile*/}
-                    <Link to={"/viewProfile"}>
+                    <Link to={"/viewProfile"} onClick={() => setIsOpen((pre) => !pre)}>
                       <Stack
                         direction={"row"}
                         gap={"1.2rem"}
@@ -174,7 +174,8 @@ const Header = () => {
                       </Stack>
                       {/* logout icon + logout*/}
                     </Link>
-                    <Stack
+                    <Stack 
+                      onClick={() => setIsOpen((pre) => !pre)}
                       direction={"row"}
                       gap={"1.2rem"}
                       display={"flex"}

@@ -21,7 +21,22 @@ export const user = createApi({
         body: user,
       }),
     }),
+
+    updateUser: builder.mutation< UserResponseMessage<User>,User>({
+      query: (user) => ({
+        method: "PUT",
+        url: "/update/profile",
+        body: user,
+      }),
+    }),
+    getUser:builder.query<User,string>({
+      query:(id)=>({
+        method:"GET",
+        url:`/getUser/${id}`
+        
+      })
+    })
   }),
 });
 
-export const { useRegisterMutation,useLoginMutation } = user;
+export const { useRegisterMutation, useLoginMutation,useUpdateUserMutation,useGetUserQuery } = user;
