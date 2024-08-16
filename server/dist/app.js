@@ -7,20 +7,24 @@ import morgan from "morgan";
 import { MongoDb } from "./utils/db.js";
 //imports routes
 import { errorMiddleware } from "./middlewares/error.js";
+import applicationRoutes from "./routes/application.js";
 import companyRoutes from "./routes/company.js";
 import jobRoutes from "./routes/job.js";
 import userRoutes from "./routes/user.js";
-import applicationRoutes from "./routes/application.js";
 config();
 const app = express();
 const port = process.env.PORT || 4000;
 const mongoUrl = process.env.MONGO_URL || "";
 const corsOptions = {
-    origin: "http://localhost:5173/",
-    Credential: true,
+    origin: 'http://localhost:5173', // use your actual domain name (or localhost), using * is not recommended
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
+    credentials: true
 };
 //middlewares
-app.use(cors({}));
+app.use(cors(corsOptions));
+// Handle preflight requests
+app.options('*', cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
@@ -32,6 +36,11 @@ app.use("/api/v1/job", jobRoutes);
 app.use("/api/v1/applications", applicationRoutes);
 // to check the error after route
 app.use(errorMiddleware);
+// app.get("/test",(req,res,next)=>{
+//     res.cookie("test","testCookies").json({
+//         message:"test"
+//     })
+// })a
 app.listen(port, () => {
     MongoDb(mongoUrl);
     console.log(`server is connected to port ${port}`);

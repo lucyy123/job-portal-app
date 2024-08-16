@@ -1,11 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { User, Userlogn, UserResponseMessage } from "../../vite-env";
+import { User, Userlogn, UserResponseMessage, UserUpdateResponseMessage } from "../../vite-env";
 
 const base = `${import.meta.env.VITE_SERVER}/api/v1/user`;
 console.log("base:", base);
 export const user = createApi({
   reducerPath: "userApi",
-  baseQuery: fetchBaseQuery({ baseUrl: base }),
+  baseQuery: fetchBaseQuery({ baseUrl: base ,credentials:"include"}),
   endpoints: (builder) => ({
     register: builder.mutation<UserResponseMessage<unknown>, User>({
       query: (user) => ({
@@ -22,11 +22,11 @@ export const user = createApi({
       }),
     }),
 
-    updateUser: builder.mutation< UserResponseMessage<User>,User>({
+    updateUser: builder.mutation<UserUpdateResponseMessage,User>({
       query: (user) => ({
         method: "PUT",
         url: "/update/profile",
-        body: user,
+        body: user,        
       }),
     }),
     getUser:builder.query<User,string>({

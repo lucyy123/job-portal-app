@@ -23,8 +23,8 @@ export type User={
   };
 
   export type UserResponseMessage<User>={
-    message: string,
-    success: boolean,
+    message?: string,
+    success?: boolean,
     user?:User
   }
 
@@ -65,4 +65,10 @@ status: ReactNode
 
 }
 
+
+export type UserUpdateResponseMessage={
+  message:string;
+  success:boolean;
+  updatedUser:User | null
+}
 

@@ -10,7 +10,7 @@ export const isUserAuthenticated = async (
   next: NextFunction
 ) => {
   const token = req.cookies.token;
-  if (!token) return next(new ErrorHandler("Try to login frst", 400));
+  if (!token) return next(new ErrorHandler("You don't have the token", 400));
 
   const secretKey = process.env.SECRET_KEY!;
   const decode = jwt.verify(token, secretKey) as JwtPayload;

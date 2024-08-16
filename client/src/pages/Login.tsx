@@ -49,16 +49,15 @@ const Login = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("login user", user);
     try {
       const res = await login(user).unwrap();
       dispatch(userExist(res.user!));
-      toast.success(res.message);
+      toast.success(res.message!);
       navigate("/");
     } catch (error) {
       const err = error as FetchBaseQueryError;
       const message=err.data as UserResponseMessage<User>
-      toast.error(message.message);
+      toast.error(message.message!);
     }
   };
   // if(isLoading) return <Loader/>
@@ -172,7 +171,7 @@ const Login = () => {
                 textTransform: "none",
               }}
             >
-              Signup
+              Login
             </Button>
             )}
           </Stack>

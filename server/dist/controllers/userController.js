@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { TryCatch } from "../middlewares/error.js";
 import { User } from "../models/user.js";
 import ErrorHandler from "../utils/errorHandlerClass.js";
+//-------------------------------------- REGISTER USER------------------
 export const Register = TryCatch(async (req, res, next) => {
     const { email, fullName, password, phoneNumber, role, profile } = req.body;
     if (!email || !fullName || !password || !phoneNumber || !role)
@@ -11,7 +12,7 @@ export const Register = TryCatch(async (req, res, next) => {
     if (user)
         return res.status(200).json({
             message: `Account is already Exist with this Email :- ${email}`,
-            success: true
+            success: true,
         });
     const hashedPassword = await bcrypt.hash(password, 10);
     await User.create({
@@ -20,13 +21,14 @@ export const Register = TryCatch(async (req, res, next) => {
         phoneNumber,
         password: hashedPassword,
         role,
-        profile
+        profile,
     });
     res.status(201).json({
         message: "Registration Succsessfull",
-        success: true
+        success: true,
     });
 });
+//-------------------------------------- LOGIN USER ------------------
 export const login = TryCatch(async (req, res, next) => {
     const { email, password, role } = req.body;
     // if request body is missing some fields or its empty
@@ -48,25 +50,30 @@ export const login = TryCatch(async (req, res, next) => {
     // user is exist and have filled all details true
     // we create the token first
     const tokenData = {
-        userId: loginUser._id
+        userId: loginUser._id,
     };
     const secretKey = process.env.SECRET_KEY;
     const token = jwt.sign(tokenData, secretKey, { expiresIn: "1d" });
-    const cookiesOptions = { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true };
+    const cookiesOptions = { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true, };
     const user = {
         UserId: loginUser._id,
         fullName: loginUser.fullName,
         email: loginUser.email,
         role: loginUser.role,
         phoneNumber: loginUser.phoneNumber,
-        profile: loginUser.profile
+        profile: loginUser.profile,
     };
-    res.status(200).cookie("token", token, cookiesOptions).json({
-        message: `Login Successfully, Welcome ${loginUser.fullName}`,
+    res
+        .status(200)
+        .cookie("token", token, { ...cookiesOptions })
+        .json({
+        message: `Welcome ${loginUser.fullName}`,
+        token,
         success: true,
         user,
     });
 });
+//-------------------------------------- LOGOUT USER------------------
 export const logout = TryCatch(async (req, res, next) => {
     res.status(200).cookie("token", "", { maxAge: 0 }).json({
         message: "Logout Successfully",
@@ -88,7 +95,7 @@ export const updateProfile = TryCatch(async (req, res, next) => {
     if (role)
         user.role = role;
     if (profile) {
-        const { bio, company, profilePhoto, resume, resumeOriginalName, skills } = profile;
+        const { bio, company, profilePhoto, resume, resumeOriginalName, skills, } = profile;
         if (bio)
             user.profile.bio = bio;
         if (profilePhoto)
@@ -107,11 +114,23 @@ export const updateProfile = TryCatch(async (req, res, next) => {
         email: user.email,
         role: user.role,
         phoneNumber: user.phoneNumber,
-        profile: user.profile
+        profile: user.profile,
     };
     return res.status(200).json({
         message: "Profile Updated Successfully",
         updatedUser,
-        success: true
+        success: true,
+    });
+});
+//--------------------------------------GET USER BY ID ------------------
+export const getUserbyId = TryCatch(async (req, res, next) => {
+    const { id } = req.params;
+    console.log('id:', id);
+    const user = await User.findById(id).select(["fullName", "email", "role", "phoneNumber", "profile"]);
+    if (!user)
+        return next(new ErrorHandler("Invalid user Id", 404));
+    return res.status(200).json({
+        success: true,
+        user
     });
 });
