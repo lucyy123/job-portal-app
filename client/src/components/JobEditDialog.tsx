@@ -17,11 +17,20 @@ import {
   FormEvent,
   SetStateAction,
   SyntheticEvent,
-  useState
+  useMemo,
+  useState,
 } from "react";
-import { useSelector } from "react-redux";
-import { allskills } from "../utils/constants";
-import { UserReducerInitialState } from "../vite-env";
+import { useDispatch, useSelector } from "react-redux";
+import { allskills, } from "../utils/constants";
+import {
+  User,
+  UserReducerInitialState,
+  UserResponseMessage,
+} from "../vite-env";
+import { useUpdateUserMutation } from "../redux/api/userApi";
+import { userExist, userNotExist } from "../redux/reducers/user";
+import toast from "react-hot-toast";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 type Propstype = {
   isOpen: boolean;
@@ -32,36 +41,74 @@ const JobEditDialog = ({ isOpen, handleOpen }: Propstype) => {
   const { user, loading } = useSelector(
     (state: { user: UserReducerInitialState }) => state.user
   );
+  const [selectedSkill, setSelectedSkill] = useState<string[]>([]);
+  const [updateUser, { isLoading, isError }] = useUpdateUserMutation();
+  const dispatch = useDispatch();
   const [userDetails, setUserDetails] = useState({
     fullName: user?.fullName,
     email: user?.email,
     phoneNumber: user?.phoneNumber,
-    bio: user?.profile?.bio,
-    resume: user?.profile?.resume,
-    skills: user?.profile?.skills || [""],
+    profile:{
+      bio: user?.profile?.bio,
+      resume: user?.profile?.resume,
+      skills: user?.profile?.skills || [""],
+    }
+  
   });
-  // const [newSkill, setNewSkill] = useState<string[] | null>();
 
-  const [selectedSkill, setSelectedSkill] = useState<string[]>([]);
+  const memoizedSelectedSkills = useMemo(() => {
+    return selectedSkill.filter((skill) => skill !== ""); // Example of processing skills
+  }, [selectedSkill]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setUserDetails((pre) => ({ ...pre, skills: selectedSkill }));
-    console.log("selectedSkill", selectedSkill);
+    const updatedDetails = { ...userDetails, profile:{...userDetails.profile,skills:memoizedSelectedSkills} }
+    setUserDetails(updatedDetails);
+    try {
+      console.log('updatedDetails:', updatedDetails)
+      const res = await updateUser(updatedDetails).unwrap();
+      dispatch(userNotExist());
+      dispatch(userExist(res.updatedUser!));
+      console.log(
+      "updated user",res.updatedUser
+
+      )
+      toast.success("Updated Successfully");
+      handleOpen(false)
+    } catch (error) {
+      console.log("error:", error);
+      const err = error as FetchBaseQueryError;
+      const message = err.data as UserResponseMessage<User>;
+      toast.error(message.message! || "something went wrong");
+      handleOpen(false)
+
+    }
   };
-  
+
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const value = e.target.value;
     const name = e.target.name;
 
-    setUserDetails((prevDetails) => ({
-      ...prevDetails,
-      [name]: value, // Update other fields
-    }));
+if(name == "bio" || name =="skills" || name ==="resume"){
+  setUserDetails((prevDetails) => ({
+    ...prevDetails,
+    profile:{
+      ...prevDetails.profile,
+      [name]:value
+    } 
+  }));
+}else{
+  setUserDetails((prevDetails) => ({
+    ...prevDetails,
+    [name]: value, 
+  }));
+}
+    
+  
+  
   };
-    console.log("userdetails",userDetails)
 
   return (
     <Box>
@@ -141,7 +188,7 @@ const JobEditDialog = ({ isOpen, handleOpen }: Propstype) => {
               <Typography>Bio</Typography>
 
               <TextField
-                value={userDetails.bio}
+                value={userDetails.profile?.bio}
                 name="bio"
                 onChange={handleChange}
                 size="small"
@@ -153,13 +200,11 @@ const JobEditDialog = ({ isOpen, handleOpen }: Propstype) => {
             <Stack>
               <Typography>Skills</Typography>
 
-             
-
               <Autocomplete
                 disablePortal
                 multiple={true}
                 limitTags={2}
-                defaultValue={userDetails.skills}
+                defaultValue={userDetails.profile?.skills}
                 id="combo-box-demo"
                 fullWidth
                 size="small"

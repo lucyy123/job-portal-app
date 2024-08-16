@@ -3,7 +3,7 @@ import ErrorHandler from "../utils/errorHandlerClass.js";
 export const isUserAuthenticated = async (req, res, next) => {
     const token = req.cookies.token;
     if (!token)
-        return next(new ErrorHandler("Try to login frst", 400));
+        return next(new ErrorHandler("You don't have the token", 400));
     const secretKey = process.env.SECRET_KEY;
     const decode = jwt.verify(token, secretKey);
     if (!decode)
