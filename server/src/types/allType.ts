@@ -1,21 +1,19 @@
 import { NextFunction, Request, Response } from "express";
 
-export type UserProfileType = {
-  bio?: string;
-  skills?: string[];
-  resume?: string;
-  resumeOriginalName?: string;
-  company?: string;
-  profilePhoto?: string;
-};
+
 //Register user request body
 export type UserRegisterReqBody = {
   fullName: string;
   email: string;
   password: string;
   phoneNumber: string;
-  profile?: UserProfileType;
   role: string;
+  bio?: string;
+  skills?: string[];
+  resume?: string;
+  resumeOriginalName?: string;
+  company?: string;
+  profilePhoto?: string;
 };
 
 export type UserLoginReqBody = {

@@ -2,10 +2,13 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { TryCatch } from "../middlewares/error.js";
 import { User } from "../models/user.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import ErrorHandler from "../utils/errorHandlerClass.js";
 //-------------------------------------- REGISTER USER------------------
 export const Register = TryCatch(async (req, res, next) => {
-    const { email, fullName, password, phoneNumber, role, profile } = req.body;
+    const { email, fullName, password, phoneNumber, role, } = req.body;
+    //!------------------------------------ Getting the user profile photo ---------------------- //
+    const profilePhoto = req.file;
     if (!email || !fullName || !password || !phoneNumber || !role)
         return next(new ErrorHandler("Please Enter All Fields", 400));
     const user = await User.findOne({ email });
@@ -15,13 +18,15 @@ export const Register = TryCatch(async (req, res, next) => {
             success: true,
         });
     const hashedPassword = await bcrypt.hash(password, 10);
+    //?------------------------------------ uploading  the user profile photo on  C L O U D I N A R Y---------------------- //
+    const profilePhotoCloud = await uploadOnCloudinary(profilePhoto?.path);
     await User.create({
         fullName,
         email,
         phoneNumber,
         password: hashedPassword,
         role,
-        profile,
+        profilePhoto: profilePhotoCloud?.url || "",
     });
     res.status(201).json({
         message: "Registration Succsessfull",
@@ -54,21 +59,25 @@ export const login = TryCatch(async (req, res, next) => {
     };
     const secretKey = process.env.SECRET_KEY;
     const token = jwt.sign(tokenData, secretKey, { expiresIn: "1d" });
-    const cookiesOptions = { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true, };
+    const cookiesOptions = { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true };
     const user = {
         UserId: loginUser._id,
         fullName: loginUser.fullName,
         email: loginUser.email,
         role: loginUser.role,
         phoneNumber: loginUser.phoneNumber,
-        profile: loginUser.profile,
+        bio: loginUser.bio,
+        skills: loginUser.skills,
+        resume: loginUser.resume,
+        resumeOriginalName: loginUser.resumeOriginalName,
+        company: loginUser.company,
+        profilePhoto: loginUser.profilePhoto,
     };
     res
         .status(200)
         .cookie("token", token, { ...cookiesOptions })
         .json({
         message: `Welcome ${loginUser.fullName}`,
-        token,
         success: true,
         user,
     });
@@ -82,7 +91,7 @@ export const logout = TryCatch(async (req, res, next) => {
 });
 export const updateProfile = TryCatch(async (req, res, next) => {
     const id = req.id;
-    const { fullName, email, phoneNumber, profile, role } = req.body;
+    const { fullName, email, phoneNumber, role, bio, profilePhoto, resume, resumeOriginalName, skills, } = req.body;
     const user = await User.findById(id);
     if (!user)
         return next(new ErrorHandler("user not found", 400));
@@ -94,19 +103,16 @@ export const updateProfile = TryCatch(async (req, res, next) => {
         user.phoneNumber = phoneNumber;
     if (role)
         user.role = role;
-    if (profile) {
-        const { bio, company, profilePhoto, resume, resumeOriginalName, skills, } = profile;
-        if (bio)
-            user.profile.bio = bio;
-        if (profilePhoto)
-            user.profile.profilePhoto = profilePhoto;
-        if (resume)
-            user.profile.resume = resume;
-        if (resumeOriginalName)
-            user.profile.resumeOriginalName = resumeOriginalName;
-        if (skills)
-            user.profile.skills = skills;
-    }
+    if (bio)
+        user.bio = bio;
+    if (profilePhoto)
+        user.profilePhoto = profilePhoto;
+    if (resume)
+        user.resume = resume;
+    if (resumeOriginalName)
+        user.resumeOriginalName = resumeOriginalName;
+    if (skills)
+        user.skills = skills;
     await user.save();
     const updatedUser = {
         UserId: user._id,
@@ -114,7 +120,11 @@ export const updateProfile = TryCatch(async (req, res, next) => {
         email: user.email,
         role: user.role,
         phoneNumber: user.phoneNumber,
-        profile: user.profile,
+        bio: user.bio,
+        profilePhoto: user.profilePhoto,
+        resume: user.resume,
+        resumeOriginalName: user.resumeOriginalName,
+        skills: user.skills,
     };
     return res.status(200).json({
         message: "Profile Updated Successfully",
@@ -125,12 +135,18 @@ export const updateProfile = TryCatch(async (req, res, next) => {
 //--------------------------------------GET USER BY ID ------------------
 export const getUserbyId = TryCatch(async (req, res, next) => {
     const { id } = req.params;
-    console.log('id:', id);
-    const user = await User.findById(id).select(["fullName", "email", "role", "phoneNumber", "profile"]);
+    console.log("id:", id);
+    const user = await User.findById(id).select([
+        "fullName",
+        "email",
+        "role",
+        "phoneNumber",
+        "profile",
+    ]);
     if (!user)
         return next(new ErrorHandler("Invalid user Id", 404));
     return res.status(200).json({
         success: true,
-        user
+        user,
     });
 });

@@ -36,11 +36,6 @@ app.use("/api/v1/job", jobRoutes);
 app.use("/api/v1/applications", applicationRoutes);
 // to check the error after route
 app.use(errorMiddleware);
-// app.get("/test",(req,res,next)=>{
-//     res.cookie("test","testCookies").json({
-//         message:"test"
-//     })
-// })a
 app.listen(port, () => {
     MongoDb(mongoUrl);
     console.log(`server is connected to port ${port}`);

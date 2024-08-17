@@ -3,11 +3,11 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { TryCatch } from "../middlewares/error.js";
 import { User } from "../models/user.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import ErrorHandler from "../utils/errorHandlerClass.js";
 import {
     NewRequest,
     UserLoginReqBody,
-    UserProfileType,
     UserRegisterReqBody,
 } from "./../types/allType.js";
 //-------------------------------------- REGISTER USER------------------
@@ -17,7 +17,10 @@ export const Register = TryCatch(
         res: Response,
         next: NextFunction
     ) => {
-        const { email, fullName, password, phoneNumber, role, profile } = req.body;
+        const { email, fullName, password, phoneNumber, role, } = req.body;
+        //!------------------------------------ Getting the user profile photo ---------------------- //
+        const profilePhoto = req.file;
+
         if (!email || !fullName || !password || !phoneNumber || !role)
             return next(new ErrorHandler("Please Enter All Fields", 400));
 
@@ -29,6 +32,12 @@ export const Register = TryCatch(
             });
 
         const hashedPassword = await bcrypt.hash(password, 10);
+       
+        //?------------------------------------ uploading  the user profile photo on  C L O U D I N A R Y---------------------- //
+      
+        const profilePhotoCloud = await uploadOnCloudinary(profilePhoto?.path)
+      
+
 
         await User.create({
             fullName,
@@ -36,7 +45,7 @@ export const Register = TryCatch(
             phoneNumber,
             password: hashedPassword,
             role,
-            profile,
+            profilePhoto: profilePhotoCloud?.url  || "" ,
         });
 
         res.status(201).json({
@@ -92,7 +101,7 @@ export const login = TryCatch(
         };
         const secretKey = process.env.SECRET_KEY!;
         const token = jwt.sign(tokenData, secretKey, { expiresIn: "1d" });
-        const cookiesOptions = { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true,};
+        const cookiesOptions = { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true };
 
         const user = {
             UserId: loginUser._id,
@@ -100,15 +109,19 @@ export const login = TryCatch(
             email: loginUser.email,
             role: loginUser.role,
             phoneNumber: loginUser.phoneNumber,
-            profile: loginUser.profile,
+            bio: loginUser.bio,
+            skills: loginUser.skills,
+            resume: loginUser.resume,
+            resumeOriginalName: loginUser.resumeOriginalName,
+            company: loginUser.company,
+            profilePhoto: loginUser.profilePhoto,
         };
 
         res
             .status(200)
-            .cookie("token", token, {...cookiesOptions})
+            .cookie("token", token, { ...cookiesOptions })
             .json({
                 message: `Welcome ${loginUser.fullName}`,
-                token,
                 success: true,
                 user,
             });
@@ -126,7 +139,17 @@ export const logout = TryCatch(async (req, res, next) => {
 export const updateProfile = TryCatch(
     async (req: NewRequest<{}, {}>, res, next) => {
         const id = req.id;
-        const { fullName, email, phoneNumber, profile, role } = req.body;
+        const {
+            fullName,
+            email,
+            phoneNumber,
+            role,
+            bio,
+            profilePhoto,
+            resume,
+            resumeOriginalName,
+            skills,
+        } = req.body;
 
         const user = await User.findById(id);
 
@@ -137,22 +160,11 @@ export const updateProfile = TryCatch(
         if (phoneNumber) user.phoneNumber = phoneNumber;
         if (role) user.role = role;
 
-        if (profile) {
-            const {
-                bio,
-                company,
-                profilePhoto,
-                resume,
-                resumeOriginalName,
-                skills,
-            }: UserProfileType = profile;
-            if (bio) user.profile!.bio = bio;
-            if (profilePhoto) user.profile!.profilePhoto = profilePhoto;
-            if (resume) user.profile!.resume = resume;
-            if (resumeOriginalName)
-                user.profile!.resumeOriginalName = resumeOriginalName;
-            if (skills) user.profile!.skills = skills;
-        }
+        if (bio) user.bio = bio;
+        if (profilePhoto) user.profilePhoto = profilePhoto;
+        if (resume) user.resume = resume;
+        if (resumeOriginalName) user.resumeOriginalName = resumeOriginalName;
+        if (skills) user.skills = skills;
 
         await user.save();
         const updatedUser = {
@@ -161,7 +173,11 @@ export const updateProfile = TryCatch(
             email: user.email,
             role: user.role,
             phoneNumber: user.phoneNumber,
-            profile: user.profile,
+            bio: user.bio,
+            profilePhoto: user.profilePhoto,
+            resume: user.resume,
+            resumeOriginalName: user.resumeOriginalName,
+            skills: user.skills,
         };
 
         return res.status(200).json({
@@ -173,19 +189,21 @@ export const updateProfile = TryCatch(
 );
 //--------------------------------------GET USER BY ID ------------------
 
-
-
 export const getUserbyId = TryCatch(async (req, res, next) => {
-
     const { id } = req.params;
-    console.log('id:', id)
+    console.log("id:", id);
 
-    const user = await User.findById(id).select(["fullName", "email", "role", "phoneNumber", "profile"])
+    const user = await User.findById(id).select([
+        "fullName",
+        "email",
+        "role",
+        "phoneNumber",
+        "profile",
+    ]);
     if (!user) return next(new ErrorHandler("Invalid user Id", 404));
 
     return res.status(200).json({
         success: true,
-        user
-    })
-
-})
+        user,
+    });
+});
