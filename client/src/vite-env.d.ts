@@ -5,22 +5,20 @@ import { ReactNode } from "react";
 
 
 export type User={
-    fullName?: string;
+    fullName?: string | Blob;
     email?: string;
     password?: string;
     phoneNumber?: string;
-    profile?: UserProfileType;
     role?: string;
-  };
-
-  export type UserProfileType = {
     bio?: string;
     skills?: string[];
     resume?: string;
     resumeOriginalName?: string;
     company?: null;
-    profilePhoto?: string;
+    profilePhoto?: File | undefined;
   };
+
+  
 
   export type UserResponseMessage<User>={
     message?: string,
@@ -72,3 +70,7 @@ export type UserUpdateResponseMessage={
   updatedUser:User | null
 }
 
+
+export type UserRegisterRequest={
+ formdata:FormData
+}

@@ -42,7 +42,7 @@ const JobEditDialog = ({ isOpen, handleOpen }: Propstype) => {
     (state: { user: UserReducerInitialState }) => state.user
   );
   const [selectedSkill, setSelectedSkill] = useState<string[]>([]);
-  const [updateUser, { isLoading, isError }] = useUpdateUserMutation();
+  const [updateUser, { isLoading}] = useUpdateUserMutation();
   const dispatch = useDispatch();
   const [userDetails, setUserDetails] = useState({
     fullName: user?.fullName,
@@ -238,7 +238,7 @@ if(name == "bio" || name =="skills" || name ==="resume"){
             mb={"1rem"}
             mt={"2rem"}
           >
-            {loading && loading ? (
+            {loading  &&  isLoading && isLoading ? (
               <LoadingButton
                 loading
                 loadingPosition="center"

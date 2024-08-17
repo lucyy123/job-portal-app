@@ -17,39 +17,33 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import { useRegisterMutation } from "../redux/api/userApi";
-import { User } from "../vite-env";
-
-const initailUser = {
-  fullName: "",
-  email: "",
-  phoneNumber: "",
-  password: "",
-  role: "",
-  profile: {
-    bio: "",
-    skills: [],
-    resume: "",
-    resumeOriginalName: "",
-    company: null,
-    profilePhoto: "",
-  },
-};
 
 const SignUp = () => {
   const [register, { isError, isLoading }] = useRegisterMutation();
-  const [user, setUser] = useState<User>(initailUser);
-  const navigate = useNavigate();
 
-  const { email, profile, fullName, password, phoneNumber, role } = user;
+  const [fullName, setFullName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [role, setRole] = useState<string>("");
+  const [profilePhoto, setProfilePhoto] = useState<File>();
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      const res = await register(user).unwrap();
-      toast.success(res.message);
+      const formdata = new FormData();
+      formdata.append("fullName", fullName);
+      formdata.append("email", email);
+      formdata.append("password", password);
+      formdata.append("phoneNumber", phoneNumber);
+      formdata.append("role", role);
+      formdata.append("profilePhoto", profilePhoto as Blob);
+      const res = await register({ formdata }).unwrap();
+      toast.success(res.message!);
       navigate("/login");
-      setUser(initailUser);
     } catch (error) {
       console.log("error:", error);
       console.log("isError:", isError);
@@ -57,16 +51,13 @@ const SignUp = () => {
     }
   };
 
-  const handlechange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const value = e.target.value;
-    const name = e.target.name;
+  const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log("file ", e.target.value);
+    const file: File | undefined = e.target.files?.[0];
 
-    setUser((pre) => ({
-      ...pre,
-      [name]: String(value),
-    }));
+    if (file) {
+      setProfilePhoto(file);
+    }
   };
 
   if (isLoading) return <Loader />;
@@ -105,6 +96,7 @@ const SignUp = () => {
               },
             }}
           >
+            {/* ----------------------------------- FULL NAME ------------------------------- */}
             <label> Full Name</label>
             <TextField
               placeholder="eg- Emily Blunt"
@@ -112,18 +104,22 @@ const SignUp = () => {
               size="small"
               sx={{}}
               name="fullName"
-              onChange={handlechange}
+              onChange={(e) => setFullName(e.target.value)}
               value={fullName}
             />
+            {/* ----------------------------------- EMAIL ------------------------------- */}
+
             <label> Email</label>
             <TextField
               placeholder="eg- example@gmail.coom"
               size="small"
               type="email"
               name="email"
-              onChange={handlechange}
+              onChange={(e) => setEmail(e.target.value)}
               value={email}
             />
+            {/* ----------------------------------- PHONE NUMBER ------------------------------- */}
+
             <label> Phone Number</label>
             <TextField
               placeholder="eg- 999999-0000"
@@ -131,8 +127,10 @@ const SignUp = () => {
               type="text"
               name="phoneNumber"
               value={phoneNumber}
-              onChange={handlechange}
+              onChange={(e) => setPhoneNumber(e.target.value)}
             />
+            {/* ----------------------------------- PASSWORD------------------------------- */}
+
             <label> Password</label>
             <TextField
               placeholder="eg- passcode"
@@ -140,17 +138,21 @@ const SignUp = () => {
               type="password"
               name="password"
               value={password}
-              onChange={handlechange}
+              onChange={(e) => setPassword(e.target.value)}
             />
+            {/* ----------------------------------- FULL NAME ------------------------------- */}
+
             <Stack
               direction={"row"}
               display={"flex"}
               justifyContent={"space-between"}
               // paddingRight={"2rem"}
             >
+              {/* ----------------------------------- ROLE [STUDENT + RECRUITER ]------------------------------- */}
+
               <FormControl style={{}}>
                 <RadioGroup
-                  onChange={handlechange}
+                  onChange={(e) => setRole(e.target.value)}
                   value={role}
                   name="role"
                   sx={{
@@ -195,6 +197,8 @@ const SignUp = () => {
                     paddingInline: "0.5rem",
                   }}
                 >
+                  {/* ----------------------------------- ProfilePhoto  ------------------------------- */}
+
                   <Button
                     variant="text"
                     role={undefined}
@@ -208,9 +212,14 @@ const SignUp = () => {
                     <TextField
                       type="file"
                       size="small"
-                      value={profile?.profilePhoto}
-                      name="file"
-                      onChange={handlechange}
+                      // value={profilePhoto}
+                      name="profilePhoto"
+                      onChange={handleFile}
+                      InputProps={{
+                        inputProps: {
+                          accept: "image/*",
+                        },
+                      }}
                       sx={{
                         clip: "rect(0 0 0 0)",
                         clipPath: "inset(50%)",
@@ -226,13 +235,14 @@ const SignUp = () => {
                   </Button>
                   <span>
                     {" "}
-                    {profile?.profilePhoto != ""
-                      ? profile?.profilePhoto
+                    {profilePhoto && profilePhoto.name != ""
+                      ? profilePhoto.name
                       : "No file choosen"}{" "}
                   </span>
                 </Box>
               </Stack>
             </Stack>
+            {/* ----------------------------------- BUTTON------------------------------- */}
 
             {isLoading && isLoading ? (
               <LoadingButton

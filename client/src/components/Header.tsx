@@ -95,7 +95,7 @@ const Header = () => {
               <Avatar
                 onClick={() => setIsOpen((pre) => !pre)}
                 alt="user Image"
-                src={userImage}
+                src={user.profilePhoto?.toString()}
                 sx={{ width: 35, height: 35 }}
               />
               <dialog
@@ -125,20 +125,20 @@ const Header = () => {
                       >
                         <Avatar
                           alt="user Image"
-                          src={userImage}
+                          src={user.profilePhoto?.toString()}
                           sx={{ width: 35, height: 35 }}
                         />
                       </Box>
                       <Stack>
                         <Typography fontSize={"1.1rem"} variant="body1">
-                          {userName}
+                          {user.fullName?.toString()}
                         </Typography>
                         <Typography
                           color={"grey"}
                           fontSize={"0.7rem"}
                           variant="body2"
                         >
-                          Lorem ipsum dolor sit....
+                      {user.bio}
                         </Typography>
                       </Stack>
                     </Stack>
