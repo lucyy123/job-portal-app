@@ -78,3 +78,7 @@ export type UserRegisterRequest={
 export type UserUpdateRequest ={
   formdata:FormData
 }
+export type LogoutUserResponseMessage={
+  message: string,
+  success: boolean,
+}

@@ -1,3 +1,4 @@
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import {
   Box,
@@ -5,6 +6,8 @@ import {
   Container,
   FormControl,
   FormControlLabel,
+  IconButton,
+  InputAdornment,
   Paper,
   Radio,
   RadioGroup,
@@ -20,6 +23,7 @@ import { useRegisterMutation } from "../redux/api/userApi";
 
 const SignUp = () => {
   const [register, { isError, isLoading }] = useRegisterMutation();
+  const [showPassword,setShowPassword]=useState<boolean>(false)
 
   const [fullName, setFullName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -135,9 +139,12 @@ const SignUp = () => {
             <TextField
               placeholder="eg- passcode"
               size="small"
-              type="password"
+              type={showPassword?"text":"password"}
               name="password"
               value={password}
+              InputProps={{
+                endAdornment:<InputAdornment  position= "end"> <IconButton  onMouseLeave={()=>setShowPassword(false)} onClick={()=>setShowPassword((pre)=>!pre)}>  { showPassword ? <VisibilityOff/>: <Visibility /> } </IconButton></InputAdornment>
+              }}
               onChange={(e) => setPassword(e.target.value)}
             />
             {/* ----------------------------------- FULL NAME ------------------------------- */}
