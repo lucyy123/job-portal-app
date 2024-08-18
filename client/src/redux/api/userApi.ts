@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { User, Userlogn, UserRegisterRequest, UserResponseMessage, UserUpdateRequest, UserUpdateResponseMessage } from "../../vite-env";
+import { LogoutUserResponseMessage, User, Userlogn, UserRegisterRequest, UserResponseMessage, UserUpdateRequest, UserUpdateResponseMessage } from "../../vite-env";
 
 const base = `${import.meta.env.VITE_SERVER}/api/v1/user`;
 console.log("base:", base);
@@ -23,6 +23,11 @@ export const user = createApi({
       }),
     }),
 
+  logout:builder.query<LogoutUserResponseMessage,unknown>({
+    query:()=>"/logout"
+    
+  }),
+
     updateUser: builder.mutation<UserUpdateResponseMessage,UserUpdateRequest>({
       query: ({formdata}) => ({
         method: "PUT",
@@ -32,7 +37,6 @@ export const user = createApi({
     }),
     getUser:builder.query<User,string>({
       query:(id)=>({
-        method:"GET",
         url:`/getUser/${id}`
         
       })
@@ -40,4 +44,4 @@ export const user = createApi({
   }),
 });
 
-export const { useRegisterMutation, useLoginMutation,useUpdateUserMutation,useGetUserQuery } = user;
+export const { useRegisterMutation, useLoginMutation,useUpdateUserMutation,useGetUserQuery,useLogoutQuery } = user;

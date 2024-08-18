@@ -38,7 +38,7 @@ type Propstype = {
 };
 
 const JobEditDialog = ({ isOpen, handleOpen }: Propstype) => {
-  const { user, loading } = useSelector(
+  const { user} = useSelector(
     (state: { user: UserReducerInitialState }) => state.user
   );
   const [updateUser, { isLoading }] = useUpdateUserMutation();

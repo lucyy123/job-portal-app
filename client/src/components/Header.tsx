@@ -15,7 +15,10 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { useLogoutQuery } from "../redux/api/userApi";
+import { userNotExist } from "../redux/reducers/user";
 import { headerMenu } from "../utils/constants";
 import { UserReducerInitialState } from "../vite-env";
 
@@ -23,13 +26,32 @@ const Header = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const { user } = useSelector(
+    (state: { user: UserReducerInitialState }) => state.user
+  );
+  const {refetch:logout } = useLogoutQuery('');
+
+
   const handleLogin = () => {
     navigate("/login");
   };
 
-  const { user } = useSelector(
-    (state: { user: UserReducerInitialState }) => state.user
-  );
+  const handleLogOut = async () => {
+    try {
+      const res =await logout();
+
+      if (res.data?.success) {
+        dispatch(userNotExist());
+      }
+
+      toast.success(res.data?.message || "Logout Successfully");
+      setIsOpen((pre) => !pre);
+    } catch (error) {
+      console.log("error:", error);
+      toast.error("Something went wrong");
+    }
+  };
 
   return (
     <AppBar
@@ -96,6 +118,7 @@ const Header = () => {
                 src={user.profilePhoto?.toString()}
                 sx={{ width: 35, height: 35 }}
               />
+              {/* ------------------------------------------- DIALOUGE------------------------------------------------ */}
               <dialog
                 open={isOpen}
                 style={{
@@ -136,12 +159,15 @@ const Header = () => {
                           fontSize={"0.7rem"}
                           variant="body2"
                         >
-                      {user.bio}
+                          {user.bio}
                         </Typography>
                       </Stack>
                     </Stack>
                     {/* user icon + user Profile*/}
-                    <Link to={"/viewProfile"} onClick={() => setIsOpen((pre) => !pre)}>
+                    <Link
+                      to={"/viewProfile"}
+                      onClick={() => setIsOpen((pre) => !pre)}
+                    >
                       <Stack
                         direction={"row"}
                         gap={"1.2rem"}
@@ -172,12 +198,15 @@ const Header = () => {
                       </Stack>
                       {/* logout icon + logout*/}
                     </Link>
-                    <Stack 
-                      onClick={() => setIsOpen((pre) => !pre)}
+                    <Stack
+                      onClick={handleLogOut}
                       direction={"row"}
                       gap={"1.2rem"}
                       display={"flex"}
                       alignItems={"center"}
+                      sx={{
+                        cursor:"pointer"
+                      }}
                     >
                       <Box
                         display={"flex"}
@@ -207,6 +236,7 @@ const Header = () => {
               </dialog>
             </Box>
           ) : (
+            // ------------------------------------------- SIGN UP ---------------------------------
             <Box
               sx={{
                 display: "flex",
@@ -226,7 +256,7 @@ const Header = () => {
                   Signup
                 </Button>
               </Link>
-
+{/* -------------------------------------------- LOGIN---------------------------------- */}
               <Button
                 onClick={handleLogin}
                 variant="contained"

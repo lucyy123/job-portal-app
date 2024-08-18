@@ -12,7 +12,7 @@ app.post("/new/register",singleUpload.single("profilePhoto"),Register)
 //2.  api - /api/v1/user/new/login
 app.post("/new/login",login)
 
-//3.  api - /api/v1/user/new/logout
+//3.  api - /api/v1/user/logout
 app.get("/logout",logout)
 
 //3.  api - /api/v1/user/getUser/userId

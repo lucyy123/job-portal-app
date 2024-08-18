@@ -1,9 +1,12 @@
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
   Button,
   Container,
   FormControl,
   FormControlLabel,
+  IconButton,
+  InputAdornment,
   Paper,
   Radio,
   RadioGroup,
@@ -27,6 +30,8 @@ const initailUser: UserLogin = {
 };
 const Login = () => {
   const [user, setUser] = useState<UserLogin>(initailUser);
+
+  const [showPassword,setShowPassword]=useState<boolean>(false)
 
   const [login, { isLoading }] = useLoginMutation();
 
@@ -110,9 +115,12 @@ const Login = () => {
             <TextField
               placeholder="eg- passcode"
               size="small"
-              type="password"
+              type={showPassword?"text":"password"}
               name="password"
               value={password}
+              InputProps={{
+                endAdornment:<InputAdornment  position= "end"> <IconButton  onMouseLeave={()=>setShowPassword(false)} onClick={()=>setShowPassword((pre)=>!pre)}>  { showPassword ? <VisibilityOff/>: <Visibility /> } </IconButton></InputAdornment>
+              }}
               onChange={handlechange}
             />
             {/*----------------------- R O L E---------------------------- */}

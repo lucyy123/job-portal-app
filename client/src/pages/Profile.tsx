@@ -1,4 +1,4 @@
-import { ContactPhoneOutlined, EmailOutlined } from "@mui/icons-material";
+import { Call, EmailOutlined } from "@mui/icons-material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
   Avatar,
@@ -176,7 +176,7 @@ const {user,loading} = useSelector((state:{user:UserReducerInitialState})=>state
           </Stack>
           <Stack direction={"row"} alignItems={"center"} gap={"0.6rem"} mt={1}>
             {" "}
-            <ContactPhoneOutlined></ContactPhoneOutlined>{user?.phoneNumber}
+            <Call></Call>{user?.phoneNumber}
           </Stack>
         </Box>
 
