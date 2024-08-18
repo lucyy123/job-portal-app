@@ -187,6 +187,7 @@ const SignUp = () => {
               >
                 <label>Profile</label>
 
+                {/* ----------------------------------- ProfilePhoto  ------------------------------- */}
                 <Box
                   sx={{
                     display: "flex",
@@ -197,7 +198,6 @@ const SignUp = () => {
                     paddingInline: "0.5rem",
                   }}
                 >
-                  {/* ----------------------------------- ProfilePhoto  ------------------------------- */}
 
                   <Button
                     variant="text"
@@ -211,8 +211,7 @@ const SignUp = () => {
                     Choose File
                     <TextField
                       type="file"
-                      size="small"
-                      // value={profilePhoto}
+                      size="small" 
                       name="profilePhoto"
                       onChange={handleFile}
                       InputProps={{

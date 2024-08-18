@@ -19,7 +19,7 @@ app.get("/logout",logout)
 app.get("/getUser/:id",isUserAuthenticated,getUserbyId)
 
 //4.  api - /api/v1/user/update/profile
-app.route("/update/profile").put(isUserAuthenticated,updateProfile)
+app.route("/update/profile").put(isUserAuthenticated,singleUpload.single("resume"), updateProfile)
 
 
 

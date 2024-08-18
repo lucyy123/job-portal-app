@@ -17,6 +17,7 @@ export const uploadOnCloudinary = (localfilePath:string | undefined) => {
             resource_type: "auto",
             folder:"job-portal/user"
         })
+
         return res
 
     } catch (error) {

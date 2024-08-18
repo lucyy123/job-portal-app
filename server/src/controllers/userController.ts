@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import { NextFunction, Request, Response } from "express";
+import fs, { PathLike } from 'fs';
 import jwt from "jsonwebtoken";
 import { TryCatch } from "../middlewares/error.js";
 import { User } from "../models/user.js";
@@ -10,7 +11,7 @@ import {
     UserLoginReqBody,
     UserRegisterReqBody,
 } from "./../types/allType.js";
-//-------------------------------------- REGISTER USER------------------
+//*-------------------------------------- REGISTER USER------------------------------
 export const Register = TryCatch(
     async (
         req: Request<{}, {}, UserRegisterReqBody>,
@@ -37,7 +38,11 @@ export const Register = TryCatch(
       
         const profilePhotoCloud = await uploadOnCloudinary(profilePhoto?.path)
       
+        //!-----------------------Delete the locally save photo-------------------------------//
+         const deletedPhoto = fs.unlinkSync(profilePhoto?.path as PathLike)
+         console.log('deletedPhoto:', deletedPhoto)
 
+        
 
         await User.create({
             fullName,
@@ -54,7 +59,7 @@ export const Register = TryCatch(
         });
     }
 );
-//-------------------------------------- LOGIN USER ------------------
+//*------------------------------------------------ LOGIN USER -----------------------------------
 
 export const login = TryCatch(
     async (
@@ -111,8 +116,8 @@ export const login = TryCatch(
             phoneNumber: loginUser.phoneNumber,
             bio: loginUser.bio,
             skills: loginUser.skills,
-            resume: loginUser.resume,
-            resumeOriginalName: loginUser.resumeOriginalName,
+            resume: loginUser.resume || "",
+            resumeOriginalName: loginUser.resumeOriginalName || "",
             company: loginUser.company,
             profilePhoto: loginUser.profilePhoto,
         };
@@ -127,7 +132,7 @@ export const login = TryCatch(
             });
     }
 );
-//-------------------------------------- LOGOUT USER------------------
+//*---------------------------------------- LOGOUT USER----------------------------------------------
 
 export const logout = TryCatch(async (req, res, next) => {
     res.status(200).cookie("token", "", { maxAge: 0 }).json({
@@ -135,6 +140,8 @@ export const logout = TryCatch(async (req, res, next) => {
         success: true,
     });
 });
+
+//*----------------------------------------- UPDATE USER-------------------------------------------
 
 export const updateProfile = TryCatch(
     async (req: NewRequest<{}, {}>, res, next) => {
@@ -145,13 +152,14 @@ export const updateProfile = TryCatch(
             phoneNumber,
             role,
             bio,
-            profilePhoto,
-            resume,
             resumeOriginalName,
+            profilePhoto,
             skills,
         } = req.body;
+       const resume = req.file
 
         const user = await User.findById(id);
+        console.log('user:', user)
 
         if (!user) return next(new ErrorHandler("user not found", 400));
 
@@ -162,9 +170,26 @@ export const updateProfile = TryCatch(
 
         if (bio) user.bio = bio;
         if (profilePhoto) user.profilePhoto = profilePhoto;
-        if (resume) user.resume = resume;
         if (resumeOriginalName) user.resumeOriginalName = resumeOriginalName;
-        if (skills) user.skills = skills;
+        if (skills){
+            user.skills = skills.split(",");
+
+        } 
+      
+            
+        //*------------------if user upload the new resume or  update it --------------------
+
+        
+       const uploadedResume=await uploadOnCloudinary(resume?.path)
+      //!-----------------------Deleted the resume locally saved ----------------------
+       const deletedResume = fs.unlinkSync(resume?.path as PathLike)
+       console.log('deletedResume:', deletedResume)
+       const resumeOrignal= resume?.originalname
+      
+       if(resume){
+        user.resume=uploadedResume?.url
+        user.resumeOriginalName=resumeOrignal
+       }
 
         await user.save();
         const updatedUser = {
@@ -180,6 +205,7 @@ export const updateProfile = TryCatch(
             skills: user.skills,
         };
 
+        console.log('updatedUser:', updatedUser)
         return res.status(200).json({
             message: "Profile Updated Successfully",
             updatedUser,

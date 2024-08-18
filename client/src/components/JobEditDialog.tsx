@@ -11,6 +11,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import {
   ChangeEvent,
   Dispatch,
@@ -20,17 +21,16 @@ import {
   useMemo,
   useState,
 } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { allskills, } from "../utils/constants";
+import { useUpdateUserMutation } from "../redux/api/userApi";
+import { userExist, userNotExist } from "../redux/reducers/user";
+import { allskills } from "../utils/constants";
 import {
   User,
   UserReducerInitialState,
   UserResponseMessage,
 } from "../vite-env";
-import { useUpdateUserMutation } from "../redux/api/userApi";
-import { userExist, userNotExist } from "../redux/reducers/user";
-import toast from "react-hot-toast";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 type Propstype = {
   isOpen: boolean;
@@ -41,73 +41,55 @@ const JobEditDialog = ({ isOpen, handleOpen }: Propstype) => {
   const { user, loading } = useSelector(
     (state: { user: UserReducerInitialState }) => state.user
   );
-  const [selectedSkill, setSelectedSkill] = useState<string[]>([]);
-  const [updateUser, { isLoading}] = useUpdateUserMutation();
+  const [updateUser, { isLoading }] = useUpdateUserMutation();
   const dispatch = useDispatch();
-  const [userDetails, setUserDetails] = useState({
-    fullName: user?.fullName,
-    email: user?.email,
-    phoneNumber: user?.phoneNumber,
-    profile:{
-      bio: user?.profile?.bio,
-      resume: user?.profile?.resume,
-      skills: user?.profile?.skills || [""],
-    }
-  
-  });
+  const [fullName, setFullName] = useState<string | Blob | undefined>(
+    user?.fullName || ""
+  );
+  const [email, setEmail] = useState<string | Blob | undefined>(user?.email || '');
+  const [phoneNumber, setPhoneNumber] = useState<string | Blob | undefined>(user?.phoneNumber || "");
+  const [bio, setBio] = useState<string | Blob | undefined>(user?.bio || "");
+  const [resume, setResume] = useState<File>();
+  const [selectedSkill, setSelectedSkill] = useState<string[]>(user?.skills || []);
 
   const memoizedSelectedSkills = useMemo(() => {
     return selectedSkill.filter((skill) => skill !== ""); // Example of processing skills
   }, [selectedSkill]);
 
+  //*---------------------------HANDLE FOR SUBMIT FORM --------------------------//
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const updatedDetails = { ...userDetails, profile:{...userDetails.profile,skills:memoizedSelectedSkills} }
-    setUserDetails(updatedDetails);
+
     try {
-      console.log('updatedDetails:', updatedDetails)
-      const res = await updateUser(updatedDetails).unwrap();
+      const formdata = new FormData();
+      formdata.append("fullName", String(fullName));
+      formdata.append("email", String(email));
+      formdata.append("phoneNumber", String(phoneNumber));
+      formdata.append("bio", String(bio));
+      formdata.append("resume", resume as Blob);
+      formdata.append("skills",String (memoizedSelectedSkills) );
+      console.log('memoizedSelectedSkills:', memoizedSelectedSkills)
+
+      const res = await updateUser({ formdata }).unwrap();
       dispatch(userNotExist());
       dispatch(userExist(res.updatedUser!));
-      console.log(
-      "updated user",res.updatedUser
-
-      )
+      console.log("updated user", res.updatedUser);
       toast.success("Updated Successfully");
-      handleOpen(false)
+      handleOpen(false);
     } catch (error) {
       console.log("error:", error);
       const err = error as FetchBaseQueryError;
       const message = err.data as UserResponseMessage<User>;
       toast.error(message.message! || "something went wrong");
-      handleOpen(false)
-
+      handleOpen(false);
     }
   };
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const value = e.target.value;
-    const name = e.target.name;
+  //*------------------------------- HANDLE FOR FILE UPLOAD (RESUME)---------------------------------//
 
-if(name == "bio" || name =="skills" || name ==="resume"){
-  setUserDetails((prevDetails) => ({
-    ...prevDetails,
-    profile:{
-      ...prevDetails.profile,
-      [name]:value
-    } 
-  }));
-}else{
-  setUserDetails((prevDetails) => ({
-    ...prevDetails,
-    [name]: value, 
-  }));
-}
-    
-  
-  
+  const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
+    const file: File | undefined = e.target.files![0];
+    setResume(file);
   };
 
   return (
@@ -151,36 +133,36 @@ if(name == "bio" || name =="skills" || name ==="resume"){
             <Stack>
               <Typography>Name</Typography>
               <TextField
-                value={userDetails.fullName}
+                value={fullName}
                 name="fullName"
-                onChange={handleChange}
+                onChange={(e) => setFullName(e.target.value)}
                 size="small"
                 fullWidth
-                placeholder=""
+                label="Full Name"
               />
             </Stack>
             {/* -----------------------email------------------ */}
             <Stack>
               <Typography>Email</Typography>
               <TextField
-                value={userDetails.email}
+                value={email}
                 name="email"
-                onChange={handleChange}
+                onChange={(e) => setEmail(e.target.value)}
                 size="small"
                 fullWidth
-                placeholder=""
+                label="Email"
               />
             </Stack>
             {/* -----------------------number------------------ */}
             <Stack>
               <Typography>Number</Typography>
               <TextField
-                value={userDetails.phoneNumber}
+                value={phoneNumber}
                 name="phoneNumber"
-                onChange={handleChange}
+                onChange={(e) => setPhoneNumber(e.target.value)}
                 size="small"
                 fullWidth
-                placeholder=""
+                label="Phone Number"
               />
             </Stack>
             {/* -----------------------bio------------------ */}
@@ -188,12 +170,12 @@ if(name == "bio" || name =="skills" || name ==="resume"){
               <Typography>Bio</Typography>
 
               <TextField
-                value={userDetails.profile?.bio}
+                value={bio}
                 name="bio"
-                onChange={handleChange}
+                onChange={(e) => setBio(e.target.value)}
                 size="small"
                 fullWidth
-                placeholder=""
+                label="Bio"
               />
             </Stack>
             {/* -----------------------Skills------------------ */}
@@ -204,7 +186,7 @@ if(name == "bio" || name =="skills" || name ==="resume"){
                 disablePortal
                 multiple={true}
                 limitTags={2}
-                defaultValue={userDetails.profile?.skills}
+                defaultValue={user?.skills}
                 id="combo-box-demo"
                 fullWidth
                 size="small"
@@ -227,7 +209,57 @@ if(name == "bio" || name =="skills" || name ==="resume"){
             {/* -----------------------Resume------------------ */}
             <Stack>
               <Typography>Resume</Typography>
-              <TextField size="small" fullWidth name="" placeholder="" />
+              <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    border: "1px solid grey",
+                    borderRadius: "5px",
+                    paddingInline: "0.5rem",
+                  }}
+                >
+
+                  <Button
+                    variant="text"
+                    role={undefined}
+                    component="label"
+                    sx={{
+                      textTransform: "none",
+                      paddingInline: "0.45rem",
+                    }}
+                  >
+                    Choose File
+                    <TextField
+                      type="file"
+                      size="small" 
+                      name="profilePhoto"
+                      onChange={handleFile}
+                      InputProps={{
+                        inputProps: {
+                          accept: "file/*",
+                        },
+                      }}
+                      sx={{
+                        clip: "rect(0 0 0 0)",
+                        clipPath: "inset(50%)",
+                        height: 1,
+                        overflow: "hidden",
+                        position: "absolute",
+                        bottom: 0,
+                        left: 0,
+                        whiteSpace: "nowrap",
+                        width: 1,
+                      }}
+                    />
+                  </Button>
+                  <span>
+                    {" "}
+                    {resume && resume.name != ""
+                      ? resume.name
+                      : "No file choosen"}{" "}
+                  </span>
+                </Box>
             </Stack>
           </Stack>
 
@@ -238,7 +270,7 @@ if(name == "bio" || name =="skills" || name ==="resume"){
             mb={"1rem"}
             mt={"2rem"}
           >
-            {loading  &&  isLoading && isLoading ? (
+            {isLoading && isLoading ? (
               <LoadingButton
                 loading
                 loadingPosition="center"
@@ -250,11 +282,7 @@ if(name == "bio" || name =="skills" || name ==="resume"){
               </LoadingButton>
             ) : (
               <Button
-                disabled={
-                  userDetails.fullName == "" ||
-                  userDetails.email == "" ||
-                  userDetails.phoneNumber == ""
-                }
+                disabled={fullName == "" || email == "" || phoneNumber == ""}
                 type="submit"
                 variant="contained"
                 sx={{

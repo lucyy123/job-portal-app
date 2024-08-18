@@ -74,3 +74,7 @@ export type UserUpdateResponseMessage={
 export type UserRegisterRequest={
  formdata:FormData
 }
+
+export type UserUpdateRequest ={
+  formdata:FormData
+}

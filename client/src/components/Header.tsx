@@ -16,7 +16,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import userImage from "../assets/images/palestineFlag.jpg";
 import { headerMenu } from "../utils/constants";
 import { UserReducerInitialState } from "../vite-env";
 
@@ -32,7 +31,6 @@ const Header = () => {
     (state: { user: UserReducerInitialState }) => state.user
   );
 
-  const userName = "Monis Khan";
   return (
     <AppBar
       position="static"
@@ -76,7 +74,7 @@ const Header = () => {
             alignItems: "center",
           }}
         >
-          {/* ----------------- H E A D E R   M E N U   I T E M S  */}
+          {/* ----------------- H E A D E R   M E N U   I T E M S --------------------- */}
           {headerMenu.map((ele) => (
             <Link key={`${ele.name}+1.1`} to={ele.link}>
               <Typography

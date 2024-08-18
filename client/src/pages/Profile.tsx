@@ -14,7 +14,6 @@ import { GridColDef } from "@mui/x-data-grid";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import userAvatar from "../assets/images/palestineFlag.jpg";
 import JobEditDialog from "../components/JobEditDialog";
 import Loader from "../components/Loader";
 import TableComponent from "../components/Table";
@@ -117,7 +116,7 @@ const {user,loading} = useSelector((state:{user:UserReducerInitialState})=>state
             }}
           >
             <Avatar
-              src={userAvatar}
+              src={user?.profilePhoto?.toString()}
               alt="user_avatar"
               sx={{
                 width: "3rem",
@@ -131,7 +130,7 @@ const {user,loading} = useSelector((state:{user:UserReducerInitialState})=>state
           <Box flex={1}>
             <Stack justifyContent={"center"}>
               <Typography variant="h4" fontSize={"1.4rem"} fontWeight={"bold"}>
-                {user?.fullName}
+                {user?.fullName?.toString()}
               </Typography>
               <Typography
                 sx={{
@@ -145,7 +144,7 @@ const {user,loading} = useSelector((state:{user:UserReducerInitialState})=>state
                 }}
               >
                 {" "}
-               {user?.profile?.bio}
+               {user?.bio}
               </Typography>
             </Stack>
           </Box>
@@ -189,7 +188,7 @@ const {user,loading} = useSelector((state:{user:UserReducerInitialState})=>state
             Skills {" "}
           </Typography>
           <Stack direction={"row"} gap={"0.3rem"} marginTop={"0.6rem"}>
-            {user?.profile?.skills?.map((ele,idx) => (
+            {user?.skills?.map((ele,idx) => (
               <Button
               key={idx}
                 variant="contained"
@@ -205,15 +204,15 @@ const {user,loading} = useSelector((state:{user:UserReducerInitialState})=>state
           </Stack>
         </Box>
 
-        {/* ------------------------ Resume------------- */}
+        {/* ------------------------ Resume + Original name------------- */}
 
         <Box>
           <Typography variant="subtitle2" fontWeight={"bold"}>
             {" "}
             Resume{" "}
           </Typography>
-          <Link to="/">
-            <Typography color={"blue"}>moniskhan_resume</Typography>
+          <Link to={`${user?.resume}`} target="_blank">
+            <Typography color={"blue"}>{user?.resumeOriginalName}</Typography>
           </Link>
         </Box>
       </Paper>

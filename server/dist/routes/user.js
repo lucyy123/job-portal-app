@@ -12,5 +12,5 @@ app.get("/logout", logout);
 //3.  api - /api/v1/user/getUser/userId
 app.get("/getUser/:id", isUserAuthenticated, getUserbyId);
 //4.  api - /api/v1/user/update/profile
-app.route("/update/profile").put(isUserAuthenticated, updateProfile);
+app.route("/update/profile").put(isUserAuthenticated, singleUpload.single("resume"), updateProfile);
 export default app;
