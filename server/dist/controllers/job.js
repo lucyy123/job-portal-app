@@ -32,7 +32,7 @@ export const createJob = TryCatch(async (req, res, next) => {
     });
 });
 export const getAllJobs = TryCatch(async (req, res, next) => {
-    const key = req.query.search || "developer";
+    const key = req.query.search || "";
     const condition = {
         $or: [
             { title: { $regex: key, $options: "i" } },

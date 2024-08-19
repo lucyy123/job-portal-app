@@ -28,15 +28,6 @@ export const filteOption: FilterOptionsType[] = [
   },
 ];
 
-export const skills = [
-  "Javascript",
-  "React",
-  "HTML",
-  "CSS",
-  "Typescript",
-  "NodeJs",
-  "MongoDB",
-];
 
 export const allskills = [
   // Technical Skills
@@ -85,3 +76,60 @@ export const allskills = [
   "Social Responsibility", "Self-Care", "Global Perspective", "Lifelong Learning"
 ];
 
+
+export  const rupessConverter = (number:number):string => {
+  const numberArr = String(number).split("");
+
+  if (number > 999 || number <= 99999) {
+    if (numberArr.length == 4) {
+      const thousandSingle = numberArr[0];
+      const decimal= numberArr[1]
+    return   decimal !="0" ? `${thousandSingle}.${decimal}K`   :`${thousandSingle}K`
+      ;
+    }
+
+    if (numberArr.length == 5) {
+      const thousandDouble = numberArr.slice(0,2).join("") ;
+      const decimal = numberArr[2]
+      
+      return   decimal !="0" ? `${thousandDouble}.${decimal}K`   :`${thousandDouble}K`
+      ;
+    }
+  }
+
+  if (number > 99999 ||  number <= 9999999) {
+    if (numberArr.length == 6) {
+      const thousandSingle = numberArr[0];
+      const decimal= numberArr[1]
+    return   decimal !="0" ? `${thousandSingle}.${decimal}L`   :`${thousandSingle}L`
+      ;
+    } 
+  
+  
+    if (numberArr.length == 7) {
+      // [1,0,0,0,0,0,0] 
+      const thousandDouble = numberArr.slice(0,2).join("") ;
+      const decimal = numberArr[2]
+  
+      return   decimal !="0" ? `${thousandDouble}.${decimal}L`   :`${thousandDouble}L` ;
+    }
+  }
+
+  return ""
+};
+
+ export const  calculateDays = (dateString: string): number=> {
+  // Parse the input date
+  const inputDate = new Date(dateString);
+  
+  // Get the current date
+  const currentDate = new Date();
+
+  // Calculate the difference in time (milliseconds)
+  const differenceInTime = currentDate.getTime() - inputDate.getTime();
+
+  // Convert the difference in time to days
+  const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
+
+  return differenceInDays;
+}

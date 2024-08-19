@@ -44,7 +44,6 @@ const Header = () => {
       if (res.data?.success) {
         dispatch(userNotExist());
       }
-
       toast.success(res.data?.message || "Logout Successfully");
       setIsOpen((pre) => !pre);
     } catch (error) {

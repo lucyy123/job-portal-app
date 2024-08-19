@@ -7,7 +7,7 @@ app.post("/create/new", isUserAuthenticated, createJob);
 //2. route - /api/v1/job/:id
 app.get("/:id", isUserAuthenticated, getJobById);
 //2. route - /api/v1/job/all/jobs
-app.get("/all/jobs", isUserAuthenticated, getAllJobs);
+app.get("/all/jobs", getAllJobs);
 //2. route - /api/v1/job/recruiter-job
 app.get("/all/recruiter-job", isUserAuthenticated, recruitersCreatedJobs);
 export default app;

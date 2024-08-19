@@ -6,8 +6,15 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { rupessConverter } from "../utils/constants";
+import { Jobs } from "../vite-env";
 
-const JobCard = () => {
+
+type Props={
+  job:Jobs
+}
+
+const JobCard = ({job}:Props) => {
   return (
     <Box maxWidth={395}>
       <Card variant="outlined">
@@ -16,15 +23,15 @@ const JobCard = () => {
         >
           {/* Company Name */}
           <Typography variant="subtitle1" fontSize={"1rem"} fontWeight="bold">
-            Company Name
+          {job.company.name}
           </Typography>
           {/* Company Location */}
           <Typography variant="body2" color={"grey"} fontWeight="bold">
-            India
+            {job.location}
           </Typography>
           {/* Job title */}
           <Typography variant="h6" fontWeight="bold">
-            Job title
+           {job.title}
           </Typography>
           {/* Job discription */}
           <Typography
@@ -33,8 +40,7 @@ const JobCard = () => {
             textOverflow={"ellipsis"}
             fontWeight="bold"
           >
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit.Porro totam
-            quam impedit molestias quibusdam tempore soluta{" "}
+           {job.discription}
           </Typography>
           {/* Job keys */}
           <Stack
@@ -50,13 +56,13 @@ const JobCard = () => {
             justifyContent={"space-between"}
           >
             <Button variant="outlined" color="info">
-              12 Positions
+             {job.position} Positions
             </Button>
             <Button variant="outlined" color="error">
-              Full Time
+            {job.jobType}
             </Button>
             <Button variant="outlined" color="primary">
-              24LPA
+              {rupessConverter(job.salary)}/Yr
             </Button>
           </Stack>
         </CardContent>

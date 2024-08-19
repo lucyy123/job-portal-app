@@ -1,7 +1,17 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
 import JobCard from "./JobCard";
+import { useSelector } from "react-redux";
+import { JobReducerInitialState } from "../vite-env";
+import Loader from "./Loader";
 
 const JobsContainer = () => {
+
+const {jobs,loading} = useSelector((state:{jobs:JobReducerInitialState})=>state.jobs)
+
+
+
+if(loading) return <Loader></Loader>
+
   return (
     <Container
       maxWidth="xl"
@@ -24,11 +34,13 @@ const JobsContainer = () => {
 
         {/* ----------------------job cards -------------------------------- */}
         <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          {Array(6)
-            .fill(0)
-            .map((ele, idx) => (
+          
+          
+          {
+          
+         jobs?.slice(0,6) .map((ele, idx) => (
               <Grid item key={idx} >
-                <JobCard />
+                <JobCard job={ele} />
               </Grid>
             ))}
         </Grid>

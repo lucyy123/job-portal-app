@@ -1,8 +1,14 @@
-import { Box, Grid, Stack } from "@mui/material";
+import { Box, Grid, Stack, Typography } from "@mui/material";
 import SearchJobCard from "../components/SearchJobCard";
 import Sidebar from "../components/Sidebar";
+import { Jobs as AllJobs } from "../vite-env";
 
-const Jobs = () => {
+type JobsPros ={
+jobs:AllJobs[] | null
+}
+
+
+const Jobs = ({jobs}:JobsPros) => {
   return (
     
     <Stack direction={"row"} gap={"0.5rem"} m={"2rem 3rem"}>
@@ -24,13 +30,11 @@ const Jobs = () => {
         <Box>
 
         <Grid container rowSpacing={3}columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          {Array(15)
-            .fill(0)
-            .map((ele, idx) => (
+          { jobs &&  jobs?.length >0 ?  jobs .map((ele, idx) => (
                 <Grid item key={idx} xs={12} sm={6} md={4} >
-                <SearchJobCard />
+                <SearchJobCard  singlejob ={ele} />
               </Grid>
-            ))}
+            )) : <Typography variant='h4'> no jobs are there</Typography>}
         </Grid>
             </Box>
       </Box>
