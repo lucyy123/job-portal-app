@@ -53,7 +53,7 @@ export const createJob = TryCatch(
 
 export const getAllJobs = TryCatch(
   async (req, res, next) => {
-     const key=req.query.search || "developer";
+     const key=req.query.search || "";
 
     const condition = {
       $or: [

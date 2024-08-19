@@ -11,8 +11,13 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import companyIcon from "../assets/images/palestineFlag.jpg";
+import { calculateDays, rupessConverter } from "../utils/constants";
+import { Jobs } from "../vite-env";
+type Props ={
+  singlejob:Jobs
+}
 
-const SearchJobCard = () => {
+const SearchJobCard = ({singlejob}:Props) => {
   const navigate = useNavigate()
   return (
     <Box maxWidth={400}>
@@ -20,7 +25,7 @@ const SearchJobCard = () => {
         <CardContent>
           <Stack gap={"1rem"}>
             <Stack direction={"row"}>
-              <Typography marginRight={"auto"}>2 days ago</Typography>
+              <Typography marginRight={"auto"}>{calculateDays(singlejob.createdAt)} days ago</Typography>
               <BookmarkAddOutlined></BookmarkAddOutlined>
             </Stack>
             {/* ------------------ company Icon + company Mame  */}
@@ -46,7 +51,7 @@ const SearchJobCard = () => {
               </Box>
               <Stack flex={1}>
                 <Typography variant="h6" fontWeight={"500"}>
-                  Company Name
+                {singlejob.company.name}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -55,7 +60,8 @@ const SearchJobCard = () => {
                   color={"grey"}
                 >
                   {" "}
-                  India
+                        {/* job location */}
+               {singlejob.location}
                 </Typography>
               </Stack>
             </Stack>
@@ -63,7 +69,7 @@ const SearchJobCard = () => {
             {/* job title + job discription + job key */}
             <Stack gap={"1rem"}>
               <Typography fontWeight={"bold"} variant="h1" fontSize={"1.4rem"}>
-               Title
+              {singlejob.title}
               </Typography>
               <Typography
                 sx={{
@@ -76,10 +82,7 @@ const SearchJobCard = () => {
                   color: "GrayText",
                 }}
               >
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde,
-                illum quos. Autem vitae sint culpa facere alias optio nostrum
-                quidem incidunt molestias, labore dolores fugit est temporibus
-                veniam quod. Voluptatum!*4
+              {singlejob.discription}
               </Typography>
 
               <Stack
@@ -95,13 +98,13 @@ const SearchJobCard = () => {
                 justifyContent={"space-between"}
               >
                 <Button variant="outlined" color="info">
-                  12 Positions
+                  {singlejob.position} Positions
                 </Button>
                 <Button variant="outlined" color="error">
-                  Full Time
+                 {singlejob.jobType}
                 </Button>
                 <Button variant="outlined" color="primary">
-                  24LPA
+                 {rupessConverter(singlejob.salary)}/Yr
                 </Button>
               </Stack>
             </Stack>

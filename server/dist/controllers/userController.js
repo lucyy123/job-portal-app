@@ -22,8 +22,10 @@ export const Register = TryCatch(async (req, res, next) => {
     //?------------------------------------ uploading  the user profile photo on  C L O U D I N A R Y---------------------- //
     const profilePhotoCloud = await uploadOnCloudinary(profilePhoto?.path);
     //!-----------------------Delete the locally save photo-------------------------------//
-    const deletedPhoto = fs.unlinkSync(profilePhoto?.path);
-    console.log('deletedPhoto:', deletedPhoto);
+    if (profilePhoto?.path) {
+        const deletedPhoto = fs.unlinkSync(profilePhoto?.path);
+        console.log('deletedPhoto:', deletedPhoto);
+    }
     await User.create({
         fullName,
         email,

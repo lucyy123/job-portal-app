@@ -82,3 +82,43 @@ export type LogoutUserResponseMessage={
   message: string,
   success: boolean,
 }
+
+
+export type Jobs ={
+  _id: string,
+  title: string,
+  jobType: string,
+  discription: string,
+  requirments:string [],
+  experienceLevel: number,
+  location: string,
+  salary: number,
+  created_by: string,
+  position: string,
+  company:Company,
+  applications: string[],
+  createdAt: string,
+  updatedA: string,
+}
+
+export type Company =  {
+  _id: string,
+  name: string,
+  UserId: string,
+  createdAt: string,
+  updatedAt: string,
+  discription:string
+}
+
+
+
+export type JobReducerInitialState ={
+  jobs:Jobs[] | null
+  loading:boolean
+}
+
+export type JobsResponseMessage ={
+  success:boolean;
+  Jobs:Jobs[]
+
+}

@@ -21,7 +21,6 @@ export const Register = TryCatch(
         const { email, fullName, password, phoneNumber, role, } = req.body;
         //!------------------------------------ Getting the user profile photo ---------------------- //
         const profilePhoto = req.file;
-
         if (!email || !fullName || !password || !phoneNumber || !role)
             return next(new ErrorHandler("Please Enter All Fields", 400));
 
@@ -39,8 +38,11 @@ export const Register = TryCatch(
         const profilePhotoCloud = await uploadOnCloudinary(profilePhoto?.path)
       
         //!-----------------------Delete the locally save photo-------------------------------//
-         const deletedPhoto = fs.unlinkSync(profilePhoto?.path as PathLike)
-         console.log('deletedPhoto:', deletedPhoto)
+        if(profilePhoto?.path){
+
+            const deletedPhoto = fs.unlinkSync(profilePhoto?.path as PathLike)
+            console.log('deletedPhoto:', deletedPhoto)
+        }
 
         
 
