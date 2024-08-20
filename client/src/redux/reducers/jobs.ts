@@ -4,6 +4,7 @@ import { JobReducerInitialState, Jobs } from "../../vite-env";
 const initialState: JobReducerInitialState = {
   jobs: null,
   loading: true,
+  getJob:null
 };
 
 export const jobsReducer = createSlice({
@@ -16,10 +17,24 @@ export const jobsReducer = createSlice({
     },
 
     noJobs: (state) => {
-      state.jobs = null;
       state.loading = true;
+      state.jobs = null;
     },
+
+
+    singleJob:(state,action:PayloadAction<Jobs>)=>{
+      state.loading=false
+      state.getJob=action.payload
+    },
+
+    noSingleJob :(state)=>{
+      state.loading=true
+      state.getJob=null;
+    }
+
+
+
   },
 });
 
-export const {getAllJobs,noJobs} = jobsReducer.actions
+export const {getAllJobs,noJobs,singleJob,noSingleJob} = jobsReducer.actions

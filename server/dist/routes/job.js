@@ -5,7 +5,7 @@ const app = express.Router();
 //1. route - /api/v1/job/create/new
 app.post("/create/new", isUserAuthenticated, createJob);
 //2. route - /api/v1/job/:id
-app.get("/:id", isUserAuthenticated, getJobById);
+app.get("/:id", getJobById);
 //2. route - /api/v1/job/all/jobs
 app.get("/all/jobs", getAllJobs);
 //2. route - /api/v1/job/recruiter-job

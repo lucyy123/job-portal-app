@@ -115,10 +115,17 @@ export type Company =  {
 export type JobReducerInitialState ={
   jobs:Jobs[] | null
   loading:boolean
+  getJob: Jobs | null
 }
 
 export type JobsResponseMessage ={
   success:boolean;
   Jobs:Jobs[]
 
+}
+
+
+export type JobResponseMessage={
+  success:boolean,
+  job:Jobs
 }
