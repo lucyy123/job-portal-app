@@ -6,24 +6,38 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGetSingleJobQuery } from "../redux/api/jobsApi";
 import { useDispatch, useSelector } from "react-redux";
 import { noSingleJob, singleJob } from "../redux/reducers/jobs";
-import { JobReducerInitialState } from "../vite-env";
+import { JobReducerInitialState, UserReducerInitialState } from "../vite-env";
 import Loader from "../components/Loader";
 import { rupessConverter } from "../utils/constants";
+import { useLazyApplynewJobQuery } from "../redux/api/applications";
+import toast from "react-hot-toast";
 
 const JobDiscription = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const {getJob,loading} = useSelector((state:{jobs:JobReducerInitialState})=>state.jobs)
- 
+  const { user } = useSelector(
+    (state: { user: UserReducerInitialState }) => state.user
+  );
+  const { getJob, loading } = useSelector(
+    (state: { jobs: JobReducerInitialState }) => state.jobs
+  );
 
-    const { refetch: job } = useGetSingleJobQuery( `${id??""}`);
+  const initialAppliedCheecked = getJob?.applications?.some(
+    (ele) => ele.applicants === user?.UserId
+  ) as boolean;
   
+  console.log('initialAppliedCheecked:', initialAppliedCheecked)
 
+  const [isJobApplied, setIsJobApplied] = useState<boolean>(
+    initialAppliedCheecked
+  );
+  const { refetch: job } = useGetSingleJobQuery(`${id ?? ""}`);
+  const [fetchData,{data,isLoading} ]= useLazyApplynewJobQuery()
 
   useEffect(() => {
     const getJobById = async () => {
@@ -31,7 +45,13 @@ const JobDiscription = () => {
         const res = await job();
         if (res.data?.success) {
           dispatch(singleJob(res.data?.job));
-
+          if (!isJobApplied) {
+            setIsJobApplied(
+              getJob?.applications?.some(
+                (ele) => ele.applicants === user?.UserId
+              ) as boolean
+            );
+          }
         } else {
           dispatch(noSingleJob());
         }
@@ -42,10 +62,20 @@ const JobDiscription = () => {
     getJobById();
   }, []);
 
+  const hanldeJobApply = async () => {
+    console.log("lkfjlskjdlf");
+    try {
+      const res = await fetchData(id!).unwrap();
+      if (res.success) {
+        toast.success(res?.message);
+      }
+      setIsJobApplied(true);
+    } catch (error) {
+      console.log("error:", error);
+    }
+  };
 
-
-
-if(loading) return <Loader></Loader>
+  if (loading) return <Loader></Loader>;
 
   return (
     <Container maxWidth="lg">
@@ -53,12 +83,12 @@ if(loading) return <Loader></Loader>
         <Stack marginRight={"auto"}>
           <Typography variant="h4" fontWeight={"bold"} fontSize={"1.4rem"}>
             {/* ----------------------------- TITLE---------------------------------- */}
-         {getJob?.title}
+            {getJob?.title}
           </Typography>
           <Stack
             direction={"row"}
             sx={{
-              gap:"1rem",
+              gap: "1rem",
               "& .MuiButton-root": {
                 textTransform: "none",
                 borderRadius: "25px",
@@ -75,25 +105,28 @@ if(loading) return <Loader></Loader>
             </Button>
             {/* --------------------------- job type---------------------------- */}
             <Button variant="outlined" color="error">
-             {getJob?.jobType}
+              {getJob?.jobType}
             </Button>
             {/* --------------------------- salary / package---------------------------- */}
             <Button variant="outlined" color="primary">
-            { getJob?.salary &&  rupessConverter(getJob?.salary)}/Yr
+              {getJob?.salary && rupessConverter(getJob?.salary)}/Yr
             </Button>
           </Stack>
         </Stack>
         <Box>
-            {/* --------------------------- user applied or not---------------------------- */}
+          {/* --------------------------- user applied or not---------------------------- */}
 
           <Button
+            onClick={hanldeJobApply}
             variant="contained"
-            color="success"
+            // todo:------------------------ need to change the disabled buton color---------------------------------
+            disabled={isJobApplied}
+            color={isJobApplied ? "success" : "info"}
             sx={{
               textTransform: "none",
             }}
           >
-            Applied
+            {isJobApplied ? "Applied" : "Apply Now"}
           </Button>
         </Box>
       </Stack>
@@ -107,7 +140,7 @@ if(loading) return <Loader></Loader>
           padding: "0.6rem 1rem",
         }}
       >
-            {/* --------------------------- discriptions---------------------------- */}
+        {/* --------------------------- discriptions---------------------------- */}
 
         <Typography variant="subtitle2" fontSize={"1.1rem"}>
           {getJob?.discription}
@@ -127,26 +160,42 @@ if(loading) return <Loader></Loader>
           </span>{" "}
         </Typography>
         <Typography>
-          Location: <span style={{ fontWeight: "normal" }}>{getJob?.location} </span>
+          Location:{" "}
+          <span style={{ fontWeight: "normal" }}>{getJob?.location} </span>
         </Typography>
         <Typography>
-          Experince: <span style={{ fontWeight: "normal" }}>{getJob?.experienceLevel} Years </span>
+          Experince:{" "}
+          <span style={{ fontWeight: "normal" }}>
+            {getJob?.experienceLevel} Years{" "}
+          </span>
         </Typography>
         <Typography>
-          Salary: <span style={{ fontWeight: "normal" }}> { getJob?.salary &&  rupessConverter(getJob?.salary)}/Yr</span>
+          Salary:{" "}
+          <span style={{ fontWeight: "normal" }}>
+            {" "}
+            {getJob?.salary && rupessConverter(getJob?.salary)}/Yr
+          </span>
         </Typography>
         <Typography>
-          Total Applicants: <span style={{ fontWeight: "normal" }}> {getJob?.applications.length}</span>
+          Total Applicants:{" "}
+          <span style={{ fontWeight: "normal" }}>
+            {" "}
+            {getJob?.applications.length}
+          </span>
         </Typography>
         <Typography>
-          Posted On: <span style={{ fontWeight: "normal" }}> { getJob?.createdAt.split("T")[0]}</span>
-        </Typography> 
+          Posted On:{" "}
+          <span style={{ fontWeight: "normal" }}>
+            {" "}
+            {getJob?.createdAt.split("T")[0]}
+          </span>
+        </Typography>
         <Stack direction={"row"} gap={"0.8rem"}>
           {" "}
           <Typography fontWeight={"bold"}>Discription: </Typography>
           <span style={{ fontWeight: "normal", textOverflow: "ellipsis" }}>
             {" "}
-           {getJob?.discription}
+            {getJob?.discription}
           </span>
         </Stack>
       </Box>

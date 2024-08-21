@@ -4,6 +4,7 @@ import HeroSection from "../components/HeroSection";
 import JobsContainer from "../components/JobsContainer";
 
 const Home = () => {
+
   return (
     <>
       <HeroSection />

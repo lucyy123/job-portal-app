@@ -20,8 +20,10 @@ type Props ={
 const SearchJobCard = ({singlejob}:Props) => {
   const navigate = useNavigate()
   return (
-    <Box maxWidth={400}>
-      <Card elevation={2}>
+    <Box maxWidth={350} display={'flex'} justifyContent={"center"} alignItems={'center'}>
+      <Card elevation={2} sx={{
+       width:"100%"
+      }} >
         <CardContent>
           <Stack gap={"1rem"}>
             <Stack direction={"row"}>

@@ -23,14 +23,14 @@ const Jobs = ({jobs}:JobsPros) => {
       <Box
         flex={1}
         sx={{
-            overflowY:"auto",
+          overflowY:"auto",
            flexShrink:0,
         }}
       >
         <Box>
 
-        <Grid container rowSpacing={3}columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          { jobs &&  jobs?.length >0 ?  jobs .map((ele, idx) => (
+        <Grid container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+          { jobs &&  jobs?.length > 0 ?  jobs .map((ele, idx) => (
                 <Grid item key={idx} xs={12} sm={6} md={4} >
                 <SearchJobCard  singlejob ={ele} />
               </Grid>

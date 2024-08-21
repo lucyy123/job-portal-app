@@ -27,9 +27,12 @@ const App = () => {
     (state: { jobs: JobReducerInitialState }) => state.jobs
   );
 
+
   const { refetch: getJobs } = useGetJobsQuery("");
 
   useEffect(() => {
+    //*--------------------------------fETCHING THE ALL JOBS------------------------------------
+
     const handletoGetJobs = async () => {
       try {
         const res = await getJobs();
@@ -41,7 +44,6 @@ const App = () => {
         console.log("error:", error);
       }
     };
-
     handletoGetJobs();
   }, []);
 
@@ -55,6 +57,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
+          //*------------------ Protected routes --------------------
           <Route path="/jobs" element={<Jobs jobs={jobs} />} />
           <Route path="/browse" element={<Browse />} />
           <Route path="/viewProfile" element={<ViewProfile />} />

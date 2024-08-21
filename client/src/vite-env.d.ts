@@ -5,6 +5,7 @@ import { ReactNode } from "react";
 
 
 export type User={
+  UserId:string,
     fullName?: string | Blob;
     email?: string;
     password?: string;
@@ -84,6 +85,26 @@ export type LogoutUserResponseMessage={
 }
 
 
+export type Company =  {
+  _id: string,
+  name: string,
+  UserId: string,
+  createdAt: string,
+  updatedAt: string,
+  discription:string
+}
+
+export type Application = {
+  _id: string,
+  job: string,
+  applicants:string,
+  status: 'pending','accepted','rejected',
+  createdAt: string,
+  updatedAt: string,
+
+}
+
+
 export type Jobs ={
   _id: string,
   title: string,
@@ -96,19 +117,11 @@ export type Jobs ={
   created_by: string,
   position: string,
   company:Company,
-  applications: string[],
+  applications: Application[],
   createdAt: string,
   updatedA: string,
 }
 
-export type Company =  {
-  _id: string,
-  name: string,
-  UserId: string,
-  createdAt: string,
-  updatedAt: string,
-  discription:string
-}
 
 
 
@@ -128,4 +141,9 @@ export type JobsResponseMessage ={
 export type JobResponseMessage={
   success:boolean,
   job:Jobs
+}
+
+export type AuthTokenInitialState ={
+  token:string | null
+  tokenLoading:boolean
 }
