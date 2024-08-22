@@ -55,7 +55,6 @@ export type FilterOptionsType={
 }
 
 export type  AppliedJobsTableRowType = {
-
 id:number;
 date:string;
 jobRole:string;
@@ -146,4 +145,12 @@ export type JobResponseMessage={
 export type AuthTokenInitialState ={
   token: string | null
   tokenLoading:boolean
+}
+
+
+export type adminCompaniesTable = {
+  id: number;
+  logo: string;
+  name: string;
+  date: string;
 }

@@ -20,8 +20,13 @@ const Login = lazy(() => import("./pages/Login"));
 const Jobs = lazy(() => import("./pages/Jobs"));
 const Browse = lazy(() => import("./pages/Browse"));
 const ViewProfile = lazy(() => import("./pages/Profile"));
-
 const JobDiscription = lazy(() => import("./pages/JobDiscription"));
+
+//*------------------------------admin components-------------------
+
+const Companies = lazy(()=>import("./pages/admin/Companies"))
+
+
 
 const App = () => {
   const dispatch = useDispatch();
@@ -74,6 +79,12 @@ const App = () => {
           <Route path="/browse" element={<Browse />} />
           <Route path="/viewProfile" element={<ViewProfile />} />
           <Route path="/job/:id" element={<JobDiscription />} />
+
+//!----------------------- Admin Routes------------------------------------
+
+
+<Route path="/admin/companies" element={<Companies/>}/>
+
         </Routes>
       </Suspense>
       <Toaster position="bottom-right" />

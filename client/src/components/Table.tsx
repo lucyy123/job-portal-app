@@ -1,15 +1,14 @@
 import { Box } from "@mui/material"
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
-import { AppliedJobsTableRowType } from "../vite-env"
 
-type TableComponentProps ={
+type TableComponentProps<T> ={
     height? : string
     widgth?:string
-    rows:AppliedJobsTableRowType[],
+    rows:T[] ,
     columns:GridColDef[]
 }
 
-const TableComponent = ({height="20rem",widgth= "25rem" ,rows,columns}:TableComponentProps) => {
+const TableComponent = <T,>({height="20rem",widgth= "25rem" ,rows,columns}:TableComponentProps<T>) => {
   return (
     <Box height={height} width={widgth}>
 
@@ -23,7 +22,6 @@ const TableComponent = ({height="20rem",widgth= "25rem" ,rows,columns}:TableComp
           },
         }}
         pageSizeOptions={[5, 10,15]}
-        // checkboxSelection
       />
     </Box>
   )

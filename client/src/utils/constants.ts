@@ -6,6 +6,20 @@ export const headerMenu: HeaderMenuType[] = [
   { name: "Browse", link: "/browse" },
 ];
 
+export const AdminHeaderMenu:HeaderMenuType[]=[
+
+  {
+    name:"Companies",
+    link:"/admin/companies"
+  }
+,
+  {
+    name:"Jobs",
+    link:"/admin/jobs"
+  }
+]
+
+
 export const carouselContent = [
   "Full Stack Developer",
   "Frontend Developer",

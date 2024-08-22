@@ -229,7 +229,8 @@ const {user,loading} = useSelector((state:{user:UserReducerInitialState})=>state
           Applied Jobs{" "}
         </Typography>
         <Box>
-          <TableComponent
+          <TableComponent<AppliedJobsTableRowType>
+
             rows={rows}
             columns={columns}
             height="15rem"

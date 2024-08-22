@@ -19,7 +19,7 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { useLogoutQuery } from "../redux/api/userApi";
 import { userNotExist } from "../redux/reducers/user";
-import { headerMenu } from "../utils/constants";
+import { AdminHeaderMenu, headerMenu } from "../utils/constants";
 import { UserReducerInitialState } from "../vite-env";
 
 const Header = () => {
@@ -96,7 +96,7 @@ const Header = () => {
           }}
         >
           {/* ----------------- H E A D E R   M E N U   I T E M S --------------------- */}
-          {headerMenu.map((ele) => (
+          { user && user.role ==="recruiter"? AdminHeaderMenu.map((ele) => (
             <Link key={`${ele.name}+1.1`} to={ele.link}>
               <Typography
                 variant="h6"
@@ -107,7 +107,18 @@ const Header = () => {
                 {ele.name}
               </Typography>
             </Link>
-          ))}
+          )) : headerMenu.map((ele) => (
+            <Link key={`${ele.name}+1.1`} to={ele.link}>
+              <Typography
+                variant="h6"
+                fontWeight={"bold"}
+                fontSize={"1.1rem"}
+                color={theme.palette.text.secondary}
+              >
+                {ele.name}
+              </Typography>
+            </Link>
+          ))      }
 
           {user ? (
             <Box>
@@ -163,40 +174,45 @@ const Header = () => {
                       </Stack>
                     </Stack>
                     {/* user icon + user Profile*/}
-                    <Link
-                      to={"/viewProfile"}
-                      onClick={() => setIsOpen((pre) => !pre)}
+                  { user && user.role ==="student" && <Link
+                    to={"/viewProfile"}
+                    onClick={() => setIsOpen((pre) => !pre)}
+                  >
+                    <Stack
+                      direction={"row"}
+                      gap={"1.2rem"}
+                      display={"flex"}
+                      alignItems={"center"}
                     >
-                      <Stack
-                        direction={"row"}
-                        gap={"1.2rem"}
+                      <Box
                         display={"flex"}
+                        justifyContent={"center"}
                         alignItems={"center"}
                       >
-                        <Box
-                          display={"flex"}
-                          justifyContent={"center"}
-                          alignItems={"center"}
-                        >
-                          <AccountCircleOutlinedIcon
-                            style={{
-                              width: 30,
-                              height: 30,
-                              color: "gray",
-                            }}
-                          />
-                        </Box>
+                        <AccountCircleOutlinedIcon
+                          style={{
+                            width: 30,
+                            height: 30,
+                            color: "gray",
+                          }}
+                        />
+                      </Box>
 
-                        <Typography
-                          fontSize={"0.95rem"}
-                          variant="body1"
-                          color={"#000"}
-                        >
-                          View Profile
-                        </Typography>
-                      </Stack>
+                      <Typography
+                        fontSize={"0.95rem"}
+                        variant="body1"
+                        color={"#000"}
+                      >
+                        View Profile
+                      </Typography>
+                    </Stack>
+                  </Link>}
+
+
+
+
+                      
                       {/* logout icon + logout*/}
-                    </Link>
                     <Stack
                       onClick={handleLogOut}
                       direction={"row"}
