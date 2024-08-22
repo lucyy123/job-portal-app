@@ -1,14 +1,16 @@
+import Cookies from "js-cookie";
 import { lazy, Suspense, useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { useGetJobsQuery } from "./redux/api/jobsApi";
 import { getAllJobs, noJobs } from "./redux/reducers/jobs";
-import { JobReducerInitialState } from "./vite-env";
+import { JobReducerInitialState, UserReducerInitialState } from "./vite-env";
 
 //!------------------- NORMAL IMPORTS--------------------------
 import Header from "./components/Header";
 import Loader from "./components/Loader";
+import { setAuthToken } from "./redux/reducers/token";
 
 //*------------------------------ LAZY IMPORTS --------------------------
 
@@ -26,7 +28,9 @@ const App = () => {
   const { jobs, loading } = useSelector(
     (state: { jobs: JobReducerInitialState }) => state.jobs
   );
-
+  const { user } = useSelector(
+    (state: { user: UserReducerInitialState }) => state.user
+  );
 
   const { refetch: getJobs } = useGetJobsQuery("");
 
@@ -38,6 +42,14 @@ const App = () => {
         const res = await getJobs();
         if (res.data?.success) {
           dispatch(getAllJobs(res.data.Jobs));
+        }
+
+        const Cookie = Cookies.get("token");
+
+        //*----------------------------------[fist step after user logged in] if cookies and user is there store the token in token reducer -----------------------------
+        if (Cookie && user) {
+          dispatch(setAuthToken(Cookie));
+          console.log("Cookies Stored ");
         }
       } catch (error) {
         dispatch(noJobs());

@@ -12,7 +12,8 @@ export const authTokenReducer = createSlice({
     reducers: {
         setAuthToken : (state,action:PayloadAction<string>)=>{
             state.token = action.payload
-            state.tokenLoading = false
+            state.tokenLoading=false
+
         },
 
         expiredToken:(state)=>{

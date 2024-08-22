@@ -49,7 +49,7 @@ export const getAllJobs = TryCatch(async (req, res, next) => {
 });
 export const getJobById = TryCatch(async (req, res, next) => {
     const { id: jobId } = req.params;
-    const job = await Job.findById(jobId).populate("company");
+    const job = await Job.findById(jobId).populate(['company', 'applications']);
     if (!job)
         return next(new ErrorHandler("Invalid Job Id", 404));
     return res.status(200).json({

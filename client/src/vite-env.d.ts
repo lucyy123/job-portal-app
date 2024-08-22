@@ -144,6 +144,6 @@ export type JobResponseMessage={
 }
 
 export type AuthTokenInitialState ={
-  token:string | null
+  token: string | null
   tokenLoading:boolean
 }

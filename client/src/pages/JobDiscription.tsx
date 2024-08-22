@@ -6,16 +6,22 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useGetSingleJobQuery } from "../redux/api/jobsApi";
-import { useDispatch, useSelector } from "react-redux";
-import { noSingleJob, singleJob } from "../redux/reducers/jobs";
-import { JobReducerInitialState, UserReducerInitialState } from "../vite-env";
-import Loader from "../components/Loader";
-import { rupessConverter } from "../utils/constants";
-import { useLazyApplynewJobQuery } from "../redux/api/applications";
 import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import Loader from "../components/Loader";
+import { useLazyApplynewJobQuery } from "../redux/api/applications";
+import { useGetSingleJobQuery } from "../redux/api/jobsApi";
+import { noSingleJob, singleJob } from "../redux/reducers/jobs";
+import { rupessConverter } from "../utils/constants";
+import {
+  JobReducerInitialState,
+  LogoutUserResponseMessage,
+  UserReducerInitialState,
+} from "../vite-env";
+
 
 const JobDiscription = () => {
   const { id } = useParams();
@@ -27,17 +33,18 @@ const JobDiscription = () => {
     (state: { jobs: JobReducerInitialState }) => state.jobs
   );
 
-  const initialAppliedCheecked = getJob?.applications?.some(
+
+  const totalApplicants = getJob?.applications.find((ele)=>ele._id===id)
+  console.log('totalApplicants:', totalApplicants)
+  const initialAppliedCheecked : boolean = getJob?.applications?.some(
     (ele) => ele.applicants === user?.UserId
-  ) as boolean;
-  
-  console.log('initialAppliedCheecked:', initialAppliedCheecked)
+  ) || false
 
   const [isJobApplied, setIsJobApplied] = useState<boolean>(
     initialAppliedCheecked
   );
   const { refetch: job } = useGetSingleJobQuery(`${id ?? ""}`);
-  const [fetchData,{data,isLoading} ]= useLazyApplynewJobQuery()
+  const [fetchData] = useLazyApplynewJobQuery();
 
   useEffect(() => {
     const getJobById = async () => {
@@ -45,13 +52,13 @@ const JobDiscription = () => {
         const res = await job();
         if (res.data?.success) {
           dispatch(singleJob(res.data?.job));
-          if (!isJobApplied) {
-            setIsJobApplied(
-              getJob?.applications?.some(
+
+             setIsJobApplied(
+              res.data.job?.applications?.some(
                 (ele) => ele.applicants === user?.UserId
               ) as boolean
             );
-          }
+          
         } else {
           dispatch(noSingleJob());
         }
@@ -60,18 +67,29 @@ const JobDiscription = () => {
       }
     };
     getJobById();
-  }, []);
+  }, [id,dispatch,user?.UserId,job]);
 
   const hanldeJobApply = async () => {
-    console.log("lkfjlskjdlf");
+    console.log("handl job")
     try {
       const res = await fetchData(id!).unwrap();
+      console.log('res:', res)
       if (res.success) {
         toast.success(res?.message);
-      }
-      setIsJobApplied(true);
+        // //-------------------- refetching the job again--------------------------
+        
+        }
+        const response = await job();
+        if (response.data?.success) {
+            dispatch(singleJob(response.data?.job));
+          
+          } 
+        setIsJobApplied(true);
+
     } catch (error) {
-      console.log("error:", error);
+      const err = error as FetchBaseQueryError;
+      const message = err.data as LogoutUserResponseMessage;
+      toast.error(message.message);
     }
   };
 
@@ -176,6 +194,7 @@ const JobDiscription = () => {
             {getJob?.salary && rupessConverter(getJob?.salary)}/Yr
           </span>
         </Typography>
+        {/* ---------------------Applicants----------------------------- */}
         <Typography>
           Total Applicants:{" "}
           <span style={{ fontWeight: "normal" }}>
