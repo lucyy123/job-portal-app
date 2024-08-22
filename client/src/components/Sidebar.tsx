@@ -1,11 +1,11 @@
 import {
-    FormControl,
-    FormControlLabel,
-    Paper,
-    Radio,
-    RadioGroup,
-    Stack,
-    Typography,
+  FormControl,
+  FormControlLabel,
+  Paper,
+  Radio,
+  RadioGroup,
+  Stack,
+  Typography,
 } from "@mui/material";
 import { filteOption } from "../utils/constants";
 
@@ -26,10 +26,10 @@ const Sidebar = () => {
           {" "}
           Filter Jobs
         </Typography>
-        {  filteOption.map((ele,idx)=><FormControl>
+        {  filteOption.map((ele,idx)=><FormControl key={idx}>
               <RadioGroup>
                <Typography
-                key={idx}
+             
                   mt={"1rem"}
                   variant="h4"
                   fontWeight={"bold"}
@@ -37,9 +37,9 @@ const Sidebar = () => {
                 >
                   {ele.filterType}
                 </Typography>
-                {ele.filters.map((ele) => (
+                {ele.filters.map((ele,index) => (
                   <FormControlLabel
-                  key={idx}
+                  key={`${index}-${idx}`}
                     control={<Radio />}
                     value={ele}
                     label={ele}

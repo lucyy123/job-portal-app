@@ -1,14 +1,16 @@
+import Cookies from "js-cookie";
 import { lazy, Suspense, useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import { JobReducerInitialState } from "./vite-env";
 import { useGetJobsQuery } from "./redux/api/jobsApi";
 import { getAllJobs, noJobs } from "./redux/reducers/jobs";
+import { JobReducerInitialState, UserReducerInitialState } from "./vite-env";
 
 //!------------------- NORMAL IMPORTS--------------------------
-import Loader from "./components/Loader";
 import Header from "./components/Header";
+import Loader from "./components/Loader";
+import { setAuthToken } from "./redux/reducers/token";
 
 //*------------------------------ LAZY IMPORTS --------------------------
 
@@ -16,7 +18,7 @@ const SignUp = lazy(() => import("./pages/SignUp"));
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Jobs = lazy(() => import("./pages/Jobs"));
-const Browse = lazy(() => import("./components/Browse"));
+const Browse = lazy(() => import("./pages/Browse"));
 const ViewProfile = lazy(() => import("./pages/Profile"));
 
 const JobDiscription = lazy(() => import("./pages/JobDiscription"));
@@ -26,22 +28,34 @@ const App = () => {
   const { jobs, loading } = useSelector(
     (state: { jobs: JobReducerInitialState }) => state.jobs
   );
+  const { user } = useSelector(
+    (state: { user: UserReducerInitialState }) => state.user
+  );
 
   const { refetch: getJobs } = useGetJobsQuery("");
 
   useEffect(() => {
+    //*--------------------------------fETCHING THE ALL JOBS------------------------------------
+
     const handletoGetJobs = async () => {
       try {
         const res = await getJobs();
         if (res.data?.success) {
           dispatch(getAllJobs(res.data.Jobs));
         }
+
+        const Cookie = Cookies.get("token");
+
+        //*----------------------------------[fist step after user logged in] if cookies and user is there store the token in token reducer -----------------------------
+        if (Cookie && user) {
+          dispatch(setAuthToken(Cookie));
+          console.log("Cookies Stored ");
+        }
       } catch (error) {
         dispatch(noJobs());
         console.log("error:", error);
       }
     };
-
     handletoGetJobs();
   }, []);
 
@@ -55,10 +69,11 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
+          //*------------------ Protected routes --------------------
           <Route path="/jobs" element={<Jobs jobs={jobs} />} />
           <Route path="/browse" element={<Browse />} />
           <Route path="/viewProfile" element={<ViewProfile />} />
-          <Route path="/jobs/:id" element={<JobDiscription />} />
+          <Route path="/job/:id" element={<JobDiscription />} />
         </Routes>
       </Suspense>
       <Toaster position="bottom-right" />

@@ -20,12 +20,14 @@ type Props ={
 const SearchJobCard = ({singlejob}:Props) => {
   const navigate = useNavigate()
   return (
-    <Box maxWidth={400}>
-      <Card elevation={2}>
+    <Box maxWidth={350} display={'flex'} justifyContent={"center"} alignItems={'center'}>
+      <Card elevation={2} sx={{
+       width:"100%"
+      }} >
         <CardContent>
           <Stack gap={"1rem"}>
             <Stack direction={"row"}>
-              <Typography marginRight={"auto"}>{calculateDays(singlejob.createdAt)} days ago</Typography>
+              <Typography marginRight={"auto"}>{calculateDays(singlejob?.createdAt)} days ago</Typography>
               <BookmarkAddOutlined></BookmarkAddOutlined>
             </Stack>
             {/* ------------------ company Icon + company Mame  */}
@@ -51,7 +53,7 @@ const SearchJobCard = ({singlejob}:Props) => {
               </Box>
               <Stack flex={1}>
                 <Typography variant="h6" fontWeight={"500"}>
-                {singlejob.company.name}
+                {singlejob?.company?.name}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -61,7 +63,7 @@ const SearchJobCard = ({singlejob}:Props) => {
                 >
                   {" "}
                         {/* job location */}
-               {singlejob.location}
+               {singlejob?.location}
                 </Typography>
               </Stack>
             </Stack>
@@ -69,7 +71,7 @@ const SearchJobCard = ({singlejob}:Props) => {
             {/* job title + job discription + job key */}
             <Stack gap={"1rem"}>
               <Typography fontWeight={"bold"} variant="h1" fontSize={"1.4rem"}>
-              {singlejob.title}
+              {singlejob?.title}
               </Typography>
               <Typography
                 sx={{
@@ -82,7 +84,7 @@ const SearchJobCard = ({singlejob}:Props) => {
                   color: "GrayText",
                 }}
               >
-              {singlejob.discription}
+              {singlejob?.discription}
               </Typography>
 
               <Stack
@@ -98,13 +100,13 @@ const SearchJobCard = ({singlejob}:Props) => {
                 justifyContent={"space-between"}
               >
                 <Button variant="outlined" color="info">
-                  {singlejob.position} Positions
+                  {singlejob?.position} Positions
                 </Button>
                 <Button variant="outlined" color="error">
-                 {singlejob.jobType}
+                 {singlejob?.jobType}
                 </Button>
                 <Button variant="outlined" color="primary">
-                 {rupessConverter(singlejob.salary)}/Yr
+                 {rupessConverter(singlejob?.salary)}/Yr
                 </Button>
               </Stack>
             </Stack>
@@ -122,7 +124,7 @@ const SearchJobCard = ({singlejob}:Props) => {
               marginBottom: "1rem",
             }}
           >
-            <Button variant="outlined" onClick={()=>navigate("/jobs/dfjlkdjsl")}>Details</Button>
+            <Button variant="outlined" onClick={()=>navigate(`/job/${singlejob?._id}`)}>Details</Button>
             <Button variant="contained">Save for later</Button>
           </Stack>
         </CardActions>

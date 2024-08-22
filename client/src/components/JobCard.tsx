@@ -16,8 +16,8 @@ type Props={
 
 const JobCard = ({job}:Props) => {
   return (
-    <Box maxWidth={395}>
-      <Card variant="outlined">
+    <Box width={375} >
+      <Card variant="outlined" >
         <CardContent
           sx={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
         >

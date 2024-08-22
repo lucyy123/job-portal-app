@@ -108,7 +108,7 @@ export const login = TryCatch(
         };
         const secretKey = process.env.SECRET_KEY!;
         const token = jwt.sign(tokenData, secretKey, { expiresIn: "1d" });
-        const cookiesOptions = { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true };
+        const cookiesOptions = {maxAge: 86400};
 
         const user = {
             UserId: loginUser._id,
@@ -126,7 +126,7 @@ export const login = TryCatch(
 
         res
             .status(200)
-            .cookie("token", token, { ...cookiesOptions })
+            .cookie("token", token, { maxAge:86400 ,priority:"high",sameSite:"lax", httpOnly:true, path:"/"})
             .json({
                 message: `Welcome ${loginUser.fullName}`,
                 success: true,

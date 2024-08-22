@@ -1,12 +1,12 @@
 import { ThemeProvider } from "@emotion/react";
+import { CssBaseline } from "@mui/material";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
+import { PersistGate } from 'redux-persist/integration/react';
 import App from "./App.tsx";
 import "./index.css";
-import { store } from "./redux/store.ts";
-
-import { CssBaseline } from "@mui/material";
+import { persistor, store } from "./redux/store.ts";
 import { theme } from "./utils/theme.ts";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -14,7 +14,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Provider store={store}>
-        <App />
+      <PersistGate loading={null} persistor={persistor} >
+      <App />
+      </PersistGate>
       </Provider>
     </ThemeProvider>
   </React.StrictMode>
