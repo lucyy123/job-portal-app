@@ -1,18 +1,22 @@
 import { NextFunction, Response } from "express";
+import fs, { PathLike } from 'fs';
 import { TryCatch } from "../middlewares/error.js";
 import { Company } from "../models/company.js";
 import { CompanyReqBody, NewRequest } from "../types/allType.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import ErrorHandler from "../utils/errorHandlerClass.js";
 
 export const registerCompany = TryCatch(
   async (
-    req: NewRequest<CompanyReqBody,{}>,
+    req: NewRequest<CompanyReqBody, {}>,
     res: Response,
     next: NextFunction
   ) => {
-    const { name, discription, logo, website } = req.body;
+    const { name, discription,
+      website } = req.body;
     const id = req.id;
 
+    console.log('name:', name)
     const company = await Company.findOne({ name });
 
     if (company)
@@ -23,63 +27,72 @@ export const registerCompany = TryCatch(
     const newCompany = await Company.create({
       name,
       discription,
-      logo,
       website,
-      UserId:id,
+      UserId: id,
     });
     return res.status(201).json({
       message: "Company Register Successfully",
-      UserId:id,
       company: newCompany,
       success: true,
     });
   }
 );
 
-export const getUserCompaneis = TryCatch(
-  async (req: NewRequest<{},{}>, res, next) => {
+export const getCompaneis = TryCatch(
+  async (req: NewRequest<{}, {}>, res, next) => {
     const UserId = req.id;
 
-    const userCompanies = await Company.find({});
-    if (!userCompanies) return next(new ErrorHandler("No Company Found", 404));
+    const allComapanies = await Company.find({});
+    if (!allComapanies) return next(new ErrorHandler("No Company Found", 404));
 
     return res.status(200).json({
       success: true,
-      companies: userCompanies,
+      companies: allComapanies,
     });
   }
 );
 
 
-export const getCompanyById= TryCatch(async(req,res,next)=>{
-const {id}= req.params;
+export const getCompanyById = TryCatch(async (req, res, next) => {
+  const { id } = req.params;
 
-const company=await Company.findById(id)
+  const company = await Company.findById(id)
 
-if(!company) return next (new ErrorHandler("Invalid Company Id or No Company Found",404));
+  if (!company) return next(new ErrorHandler("Invalid Company Id or No Company Found", 404));
 
-return res.status(200).json({
-    success:true,
-    companyId:id,
+  return res.status(200).json({
+    success: true,
     company
-})
+  })
 });
 
-export const updateCompany = TryCatch(async(req:NewRequest<CompanyReqBody,{}>,res,next)=>{
-const {id}= req.params;
-const { name, discription, logo, website } = req.body;
-const updatedData = {
-    name, discription, logo, website 
+export const updateCompany = TryCatch(async (req: NewRequest<CompanyReqBody, {}>, res, next) => {
+  const { id } = req.params;
+  const { name, discription, website, location } = req.body;
 
-}
+  const logo = req.file
 
-const updatedCompany = await Company.findByIdAndUpdate(id,updatedData,{new:true});
+  const cloud = await uploadOnCloudinary(logo?.path);
+  if (logo?.path) {
+    const deletedLogo = fs.unlinkSync(logo.path as PathLike)
+    console.log("logo deleted", deletedLogo)
+  }
 
-if(!updatedCompany) return next (new ErrorHandler("Company Not Found",404));
+  const updatedData = {
+    name,
+    discription,
+    website,
+    location,
+    logo: cloud?.secure_url
 
-return res.status(201).json({
-    message:"Company Information Updated",
-    success:true,
+  }
+  const updatedCompany = await Company.findByIdAndUpdate(id, updatedData, { new: true });
+
+  if (!updatedCompany) return next(new ErrorHandler("Company Not Found", 404));
+
+  return res.status(201).json({
+    message: "Company Information Updated",
+    success: true,
     updatedCompany
-})
+  })
 })

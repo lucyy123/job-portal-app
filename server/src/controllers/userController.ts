@@ -39,7 +39,6 @@ export const Register = TryCatch(
       
         //!-----------------------Delete the locally save photo-------------------------------//
         if(profilePhoto?.path){
-
             const deletedPhoto = fs.unlinkSync(profilePhoto?.path as PathLike)
             console.log('deletedPhoto:', deletedPhoto)
         }

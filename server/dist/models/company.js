@@ -5,6 +5,9 @@ const scheme = new mongoose.Schema({
         required: true,
         unique: true
     },
+    location: {
+        type: String
+    },
     discription: {
         type: String,
     },

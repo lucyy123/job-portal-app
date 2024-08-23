@@ -1,34 +1,35 @@
+import fs from 'fs';
 import { TryCatch } from "../middlewares/error.js";
 import { Company } from "../models/company.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import ErrorHandler from "../utils/errorHandlerClass.js";
 export const registerCompany = TryCatch(async (req, res, next) => {
-    const { name, discription, logo, website } = req.body;
+    const { name, discription, website } = req.body;
     const id = req.id;
+    console.log('name:', name);
     const company = await Company.findOne({ name });
     if (company)
         return next(new ErrorHandler("Company Name Already Exist,Try Different One", 404));
     const newCompany = await Company.create({
         name,
         discription,
-        logo,
         website,
         UserId: id,
     });
     return res.status(201).json({
         message: "Company Register Successfully",
-        UserId: id,
         company: newCompany,
         success: true,
     });
 });
-export const getUserCompaneis = TryCatch(async (req, res, next) => {
+export const getCompaneis = TryCatch(async (req, res, next) => {
     const UserId = req.id;
-    const userCompanies = await Company.find({});
-    if (!userCompanies)
+    const allComapanies = await Company.find({});
+    if (!allComapanies)
         return next(new ErrorHandler("No Company Found", 404));
     return res.status(200).json({
         success: true,
-        companies: userCompanies,
+        companies: allComapanies,
     });
 });
 export const getCompanyById = TryCatch(async (req, res, next) => {
@@ -38,15 +39,24 @@ export const getCompanyById = TryCatch(async (req, res, next) => {
         return next(new ErrorHandler("Invalid Company Id or No Company Found", 404));
     return res.status(200).json({
         success: true,
-        companyId: id,
         company
     });
 });
 export const updateCompany = TryCatch(async (req, res, next) => {
     const { id } = req.params;
-    const { name, discription, logo, website } = req.body;
+    const { name, discription, website, location } = req.body;
+    const logo = req.file;
+    const cloud = await uploadOnCloudinary(logo?.path);
+    if (logo?.path) {
+        const deletedLogo = fs.unlinkSync(logo.path);
+        console.log("logo deleted", deletedLogo);
+    }
     const updatedData = {
-        name, discription, logo, website
+        name,
+        discription,
+        website,
+        location,
+        logo: cloud?.secure_url
     };
     const updatedCompany = await Company.findByIdAndUpdate(id, updatedData, { new: true });
     if (!updatedCompany)

@@ -46,6 +46,7 @@ const SignUp = () => {
       formdata.append("role", role);
       formdata.append("profilePhoto", profilePhoto as Blob);
       const res = await register({ formdata }).unwrap();
+      
       toast.success(res.message!);
       navigate("/login");
     } catch (error) {
