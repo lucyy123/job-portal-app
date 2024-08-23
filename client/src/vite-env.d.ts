@@ -88,6 +88,9 @@ export type Company =  {
   _id: string,
   name: string,
   UserId: string,
+  website?:string
+  logo?:string,
+  location?:string
   createdAt: string,
   updatedAt: string,
   discription:string
@@ -153,4 +156,36 @@ export type adminCompaniesTable = {
   logo: string;
   name: string;
   date: string;
+}
+
+export type ComapniesReducerInitialState = {
+  companies:Company[] | null
+  singleCompany:Company | null
+  loading:boolean
+
+}
+
+export type GetAllComapanyResponseMessage ={
+  success: boolean,
+  companies: Company[],
+}
+
+export type SinglecompanyResponseCompany={
+  success:boolean,
+  company:Company
+}
+
+export type CreateCompanyRequest ={
+  id?:string
+  formdata:FormData
+}
+export type CreateCompanyRespone={
+  message: string,
+  company: Company,
+  success: boolean
+  updateCompany?:Company
+}
+
+ export type NewCompanyRequest={
+  name:string
 }

@@ -13,7 +13,7 @@ const TableComponent = <T,>({height="20rem",widgth= "25rem" ,rows,columns}:Table
     <Box height={height} width={widgth}>
 
 <DataGrid
-
+ sx={{border:"1px solid "}}
         rows={rows}
         columns={columns}
         initialState={{

@@ -137,6 +137,7 @@ const Header = () => {
                   left: "calc(100% - 15rem)",
                   border: "none",
                   outline: "none",
+                  zIndex:2
                 }}
               >
                 <Paper elevation={4}>

@@ -5,7 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { useGetJobsQuery } from "./redux/api/jobsApi";
 import { getAllJobs, noJobs } from "./redux/reducers/jobs";
-import { JobReducerInitialState, UserReducerInitialState } from "./vite-env";
+import {
+  JobReducerInitialState,
+  UserReducerInitialState,
+} from "./vite-env";
 
 //!------------------- NORMAL IMPORTS--------------------------
 import Header from "./components/Header";
@@ -24,7 +27,9 @@ const JobDiscription = lazy(() => import("./pages/JobDiscription"));
 
 //*------------------------------admin components-------------------
 
-const Companies = lazy(()=>import("./pages/admin/Companies"))
+const Companies = lazy(() => import("./pages/admin/Companies"));
+const CompanyCreate = lazy(()=>import("./pages/admin/CreateNewCompany"))
+const Company = lazy(()=>import ("./pages/admin/Comapany"))
 
 
 
@@ -37,7 +42,9 @@ const App = () => {
     (state: { user: UserReducerInitialState }) => state.user
   );
 
+
   const { refetch: getJobs } = useGetJobsQuery("");
+
 
   useEffect(() => {
     //*--------------------------------fETCHING THE ALL JOBS------------------------------------
@@ -51,7 +58,7 @@ const App = () => {
 
         const Cookie = Cookies.get("token");
 
-        //*----------------------------------[fist step after user logged in] if cookies and user is there store the token in token reducer -----------------------------
+        //*----------------------------------[first step after user logged in] if cookies and user is there store the token in token reducer -----------------------------
         if (Cookie && user) {
           dispatch(setAuthToken(Cookie));
           console.log("Cookies Stored ");
@@ -62,6 +69,7 @@ const App = () => {
       }
     };
     handletoGetJobs();
+
   }, []);
 
   return loading ? (
@@ -79,12 +87,19 @@ const App = () => {
           <Route path="/browse" element={<Browse />} />
           <Route path="/viewProfile" element={<ViewProfile />} />
           <Route path="/job/:id" element={<JobDiscription />} />
+          //!----------------------- Admin
+          Routes------------------------------------
+          <Route
+            path="/admin/companies"
+            element={<Companies/>}
+          />
 
-//!----------------------- Admin Routes------------------------------------
+          <Route  path="/admin/companies/create" element ={<CompanyCreate/>}/>
 
-
-<Route path="/admin/companies" element={<Companies/>}/>
-
+          <Route
+            path="/admin/companies/:id"
+            element={<Company/>}
+          />
         </Routes>
       </Suspense>
       <Toaster position="bottom-right" />
