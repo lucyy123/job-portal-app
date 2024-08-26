@@ -19,13 +19,13 @@ import { companiesRwducer } from './reducers/companies';
 import { jobsReducer } from './reducers/jobs';
 import { authTokenReducer } from './reducers/token';
 import { userReducer } from './reducers/user';
+import { applicationsReducer } from './reducers/application';
 
 
 
 const persistConfig = {
   key: 'root',  
   storage,     
-  // whitelist: ['userReducer', 'jobsReducer'],
   version: 1,
 };
 
@@ -40,7 +40,9 @@ const rootReducer = combineReducers({
   [userReducer.name]: persistReducer(persistConfig, userReducer.reducer),
   [jobsReducer.name]: persistReducer(persistConfig, jobsReducer.reducer),
   [authTokenReducer.name]:persistReducer(persistConfig,authTokenReducer.reducer),
-  [companiesRwducer.name]:persistReducer(persistConfig,companiesRwducer.reducer)
+  [companiesRwducer.name]:persistReducer(persistConfig,companiesRwducer.reducer),
+  [applicationsReducer.name]:persistReducer(persistConfig,applicationsReducer.reducer)
+
 });
 
 export const store = configureStore({

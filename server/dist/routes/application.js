@@ -13,7 +13,7 @@ app.get("/get/all", isUserAuthenticated, getAllApplications);
 app.get("/getAppliedJobs", isUserAuthenticated, getAppliedJobs);
 // get the all applicant related to the job
 //4. route api/v1/applications/applicants/jobId
-app.get("/applicants/:id", isUserAuthenticated, getAllApplicants);
+app.get("/job/:id/applicants", isUserAuthenticated, getAllApplicants);
 //5. route api/v1/applications/updateStatus/ApplicationId
 app.route("/status/:id").put(isUserAuthenticated, updateStatus);
 export default app;

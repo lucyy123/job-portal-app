@@ -59,7 +59,7 @@ export const getJobById = TryCatch(async (req, res, next) => {
 });
 export const recruitersCreatedJobs = TryCatch(async (req, res, next) => {
     const { id: recruiterId } = req;
-    const jobs = await Job.find({ created_by: recruiterId });
+    const jobs = await Job.find({ created_by: recruiterId }).populate('company');
     if (!jobs)
         return next(new ErrorHandler("No Jobs Found", 404));
     return res.status(200).json({

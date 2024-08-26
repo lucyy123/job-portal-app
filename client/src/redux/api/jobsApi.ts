@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { JobResponseMessage, JobsResponseMessage } from "../../vite-env";
+import { AminAllJobResponseMessage, JobCreated, JobCreatedResMessage, JobResponseMessage, JobsResponseMessage, } from "../../vite-env";
 
 const base = `${import.meta.env.VITE_SERVER}/api/v1/job`;
 
@@ -15,11 +15,29 @@ export const jobs = createApi({
       }),
     }),
 
-    getSingleJob:builder.query<JobResponseMessage,string>({
-    query:(id)=>`/${id}`
-  })
+    getSingleJob: builder.query<JobResponseMessage, string>({
+      query: (id) => `/${id}`
+    }),
+
+    getAdminJobs: builder.query<AminAllJobResponseMessage, string>({
+      query: () => "/all/recruiter-job"
+    }),
+
+
+    getJobByItsid: builder.query<JobResponseMessage, string>({
+      query: (id) => `/${id}`
+    }),
+
+
+    postJob:builder.mutation<JobCreatedResMessage,JobCreated> ({
+      query:(job)=>({
+        method:"POST",
+        body:job,
+        url:'/create/new'
+      })
+    })
 
   }),
 });
 
-export const {useGetJobsQuery,useGetSingleJobQuery}=jobs
+export const { useGetJobsQuery, useGetSingleJobQuery, useLazyGetAdminJobsQuery, useLazyGetJobByItsidQuery,usePostJobMutation } = jobs

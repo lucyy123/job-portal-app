@@ -16,7 +16,7 @@ const app = express();
 const port = process.env.PORT || 4000;
 const mongoUrl = process.env.MONGO_URL || "";
 const corsOptions = {
-    origin: 'http://localhost:5173', // use your actual domain name (or localhost), using * is not recommended
+    origin: 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
     credentials: true

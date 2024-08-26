@@ -166,7 +166,7 @@ const Comapany = () => {
           <Grid item md={12}>
             {/* ----------------------------- logo ------------------------ */}
             <Typography>Logo</Typography>
-            <TextField fullWidth size="small" type="File" onChange={handleFile} />
+            <TextField fullWidth size="small" required type="File" onChange={handleFile} />
           </Grid>
         </Grid>
 
@@ -176,6 +176,7 @@ const Comapany = () => {
             loadingPosition="center"
             variant="contained"
             fullWidth={true}
+            
             sx={{ bgcolor: "primary.main" }}
           >
             <span>loading...</span>
