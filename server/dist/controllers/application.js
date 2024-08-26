@@ -54,8 +54,9 @@ export const getAllApplicants = TryCatch(async (req, res, next) => {
     const jobId = req.params.id;
     const applications = await Job.findById(jobId).populate({
         path: "applications",
-        options: { sort: { createdAt: -1 } },
+        options: { sort: { createdAt: -1 }, },
         populate: {
+            select: "fullName email phoneNumber resume",
             path: "applicants",
             options: { sort: { createdAt: -1 } },
         },
@@ -91,7 +92,7 @@ export const updateStatus = TryCatch(async (req, res, next) => {
     application.save();
     return res.status(201).json({
         message: "Status Updated Successfully",
-        newStatus,
+        success: true,
         application,
     });
 });
@@ -102,6 +103,6 @@ export const getAllApplications = TryCatch(async (req, res, next) => {
         return next(new ErrorHandler("No Applications are found", 404));
     return res.status(200).json({
         success: true,
-        allApplications
+        allApplications,
     });
 });

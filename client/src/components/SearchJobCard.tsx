@@ -10,7 +10,6 @@ import {
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import companyIcon from "../assets/images/palestineFlag.jpg";
 import { calculateDays, rupessConverter } from "../utils/constants";
 import { Jobs } from "../vite-env";
 type Props ={
@@ -43,7 +42,7 @@ const SearchJobCard = ({singlejob}:Props) => {
                 }}
               >
                 <Avatar
-                  src={companyIcon}
+                  src={singlejob.company.logo}
                   alt="company_icon"
                   sx={{
                     width: "2.3rem",

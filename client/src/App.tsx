@@ -27,9 +27,12 @@ const JobDiscription = lazy(() => import("./pages/JobDiscription"));
 
 //*------------------------------admin components-------------------
 
-const Companies = lazy(() => import("./pages/admin/Companies"));
-const CompanyCreate = lazy(()=>import("./pages/admin/CreateNewCompany"))
-const Company = lazy(()=>import ("./pages/admin/Comapany"))
+const Companies = lazy(() => import("./pages/admin/companies/Companies"));
+const CompanyCreate = lazy(()=>import("./pages/admin/companies/CreateNewCompany"))
+const Company = lazy(()=>import ("./pages/admin/companies/Comapany"))
+const AdminJobs= lazy(()=>import("./pages/admin/jobs/Jobs"))
+const CreateJob = lazy(()=>import('./pages/admin/jobs/CreateJob'))
+const Applicants = lazy(()=>import("./pages/admin/applicants/applicants"))
 
 
 
@@ -70,7 +73,7 @@ const App = () => {
     };
     handletoGetJobs();
 
-  }, []);
+  }, [dispatch,user,getJobs]);
 
   return loading ? (
     <Loader></Loader>
@@ -87,8 +90,7 @@ const App = () => {
           <Route path="/browse" element={<Browse />} />
           <Route path="/viewProfile" element={<ViewProfile />} />
           <Route path="/job/:id" element={<JobDiscription />} />
-          //!----------------------- Admin
-          Routes------------------------------------
+          //!----------------------- Admin Routes------------------------------------
           <Route
             path="/admin/companies"
             element={<Companies/>}
@@ -100,9 +102,15 @@ const App = () => {
             path="/admin/companies/:id"
             element={<Company/>}
           />
+
+          <Route path="admin/jobs"  element={<AdminJobs/>} />
+          <Route path = "/admin/job/create" element ={<CreateJob/>}/>
+<Route path="/admin/jobs/:id/applicants" element={<Applicants/>} />
+
+
         </Routes>
       </Suspense>
-      <Toaster position="bottom-right" />
+      <Toaster position="bottom-right"  />
     </Router>
   );
 };

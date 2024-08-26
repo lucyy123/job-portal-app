@@ -4,43 +4,41 @@ import { Job } from "../models/jobs.js";
 import { NewRequest } from "../types/allType.js";
 import ErrorHandler from "../utils/errorHandlerClass.js";
 
-export const applyJob = TryCatch(
-  async (req: NewRequest<{}, {}>, res, next) => {
-    const { id: userId } = req;
-    const { id: jobId } = req.params;
+export const applyJob = TryCatch(async (req: NewRequest<{}, {}>, res, next) => {
+  const { id: userId } = req;
+  const { id: jobId } = req.params;
 
-    if (!jobId) return next(new ErrorHandler("Job Id is Required", 404));
+  if (!jobId) return next(new ErrorHandler("Job Id is Required", 404));
 
-    const job = await Job.findById(jobId);
+  const job = await Job.findById(jobId);
 
-    if (!job) return next(new ErrorHandler("Invalid Job Id", 404));
+  if (!job) return next(new ErrorHandler("Invalid Job Id", 404));
 
-    const isJobApplied = await Application.findOne({
-      job: jobId,
-      applicants: userId,
-    });
+  const isJobApplied = await Application.findOne({
+    job: jobId,
+    applicants: userId,
+  });
 
-    if (isJobApplied) {
-      return res.status(404).json({
-        message: "You Have Applied This Job Already",
-        success: false,
-      });
-    }
-
-    const newApplication = await Application.create({
-      job: jobId,
-      applicants: userId,
-    });
-
-    job.applications.push(newApplication._id);
-    await job.save();
-
-    return res.status(201).json({
-      message: "Applied Job Successfully",
-      jobId,
+  if (isJobApplied) {
+    return res.status(404).json({
+      message: "You Have Applied This Job Already",
+      success: false,
     });
   }
-);
+
+  const newApplication = await Application.create({
+    job: jobId,
+    applicants: userId,
+  });
+
+  job.applications.push(newApplication._id);
+  await job.save();
+
+  return res.status(201).json({
+    message: "Applied Job Successfully",
+    jobId,
+  });
+});
 
 export const getAppliedJobs = TryCatch(
   async (req: NewRequest<{}, {}>, res, next) => {
@@ -69,10 +67,12 @@ export const getAllApplicants = TryCatch(async (req, res, next) => {
   const jobId = req.params.id;
   const applications = await Job.findById(jobId).populate({
     path: "applications",
-    options: { sort: { createdAt: -1 } },
+    options: { sort: { createdAt: -1 } ,  },
     populate: {
+      select:"fullName email phoneNumber resume",
       path: "applicants",
       options: { sort: { createdAt: -1 } },
+    
     },
   });
 
@@ -88,7 +88,7 @@ export const updateStatus = TryCatch(
   async (req: NewRequest<{}, {}>, res, next) => {
     const applicationId = req.params.id;
     let { status } = req.body;
-    const newStatus:string =String(status).toLocaleLowerCase() 
+    const newStatus: string = String(status).toLocaleLowerCase();
     if (!status) return next(new ErrorHandler("status is require", 404));
     const application = await Application.findById(applicationId);
 
@@ -110,28 +110,24 @@ export const updateStatus = TryCatch(
 
     return res.status(201).json({
       message: "Status Updated Successfully",
-      newStatus,
+      success:true,
       application,
     });
   }
 );
 
-export const getAllApplications = TryCatch(async(req:NewRequest<{},{}>,res,next)=>{
+export const getAllApplications = TryCatch(
+  async (req: NewRequest<{}, {}>, res, next) => {
+    const id = req.id;
 
-const id = req.id;
+    const allApplications = await Application.find({});
 
-const allApplications = await Application.find({});
+    if (!allApplications)
+      return next(new ErrorHandler("No Applications are found", 404));
 
-if(!allApplications) return next (new ErrorHandler("No Applications are found",404));
-
-
-return res.status(200).json({
-  success:true,
-allApplications
-})
-
-
-
-
-
-})
+    return res.status(200).json({
+      success: true,
+      allApplications,
+    });
+  }
+);

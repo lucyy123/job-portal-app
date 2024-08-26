@@ -1,4 +1,3 @@
-
 /// <reference types="vite/client" />
 
 import { ReactNode } from "react";
@@ -131,6 +130,8 @@ export type JobReducerInitialState ={
   jobs:Jobs[] | null
   loading:boolean
   getJob: Jobs | null
+  adminJobs:Jobs[] | null
+  adminSingleJob:Jobs |null
 }
 
 export type JobsResponseMessage ={
@@ -143,6 +144,11 @@ export type JobsResponseMessage ={
 export type JobResponseMessage={
   success:boolean,
   job:Jobs
+}
+
+export type AminAllJobResponseMessage={
+  success:boolean,
+  jobs:Jobs[]
 }
 
 export type AuthTokenInitialState ={
@@ -188,4 +194,113 @@ export type CreateCompanyRespone={
 
  export type NewCompanyRequest={
   name:string
+}
+
+type TableRowsType = {
+  id: string;
+  logo: string;
+  name: string;
+  date: string;
+  update: string;
+};
+type TableAdminRowsType = {
+  id: string;
+  company: string;
+  role: string;
+  date: string;
+  update?: string;
+};
+
+export type JobCreated ={
+  title: string,
+  jobType: string,
+  discription: string,
+  requirments:string,
+  experienceLevel: string,
+  location: string,
+  salary: string,
+  position: string,
+  company:string,
+}
+ 
+
+export type JobCreatedResMessage  = {
+  success:boolean;
+  message:string
+}
+
+
+
+export type  UserAppliedToJob={
+  _id: string;
+  job: string;
+  applicants:Applicants;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+
+export type Applicants = {
+  _id: string,
+  fullName: string,
+  email: string,
+  phoneNumber: number,
+  resume:string;
+}
+
+
+export type ApplicationsRes =  {
+  _id: string;
+  title: string;
+  jobType: string;
+  discription: string;
+  requirments:string[],
+  experienceLevel: number,
+  location: string;
+  salary: number
+  created_by: string,
+  position:string,
+  company: string,
+  applications: UserAppliedToJob[],
+  createdAt: string,
+  updatedAt: string,
+}
+
+
+
+
+export type getAllApplicantsOfJobResMessage = {
+  success: boolean,
+   applications:ApplicationsRes
+}
+
+export type ApplicationsReducerInitialState ={
+  loading:boolean;
+  applications: ApplicationsRes | null
+}
+
+export type AdminApplicantsRow = {
+  id: string;
+  full_name: string;
+  email: string;
+  contact: string;
+  resume: string;
+  date: string;
+  status:string
+}
+
+
+export type UpdateApplicationResponse = {
+  message:string;
+  success:boolean
+  application:UserAppliedToJob
+}
+
+export type UpdateApplicationReq = {
+id:string
+data:{
+  status:string
+}
+
 }
