@@ -42,8 +42,8 @@ export const applyJob = TryCatch(async (req: NewRequest<{}, {}>, res, next) => {
 
 export const getAppliedJobs = TryCatch(
   async (req: NewRequest<{}, {}>, res, next) => {
-    const id = req.id;
-    const appliedJobs = await Application.find({ applicants: id })
+    const {id:UserId} = req;
+    const appliedJobs = await Application.find({ applicants: UserId })
       .sort({ createdAt: -1 })
       .populate({
         path: "job",

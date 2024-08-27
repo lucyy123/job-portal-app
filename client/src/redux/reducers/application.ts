@@ -2,11 +2,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   ApplicationsReducerInitialState,
   ApplicationsRes,
+  UserAppliedJobs,
 } from "../../vite-env";
 
 const initialState: ApplicationsReducerInitialState = {
   loading: true,
   applications: null,
+  applieadJobs:null
 };
 
 export const applicationsReducer = createSlice({
@@ -16,8 +18,14 @@ export const applicationsReducer = createSlice({
     getApplicationsOfJobId: (state, action: PayloadAction<ApplicationsRes>) => {
       (state.applications = action.payload), (state.loading = false);
     },
+   getApplieadJob:(state,action:PayloadAction<UserAppliedJobs[]> )=>{
+   state.applieadJobs= action.payload
+   state.loading = false
+   }
+
+
   },
 });
 
 
-export const {getApplicationsOfJobId} = applicationsReducer.actions
+export const {getApplicationsOfJobId, getApplieadJob} = applicationsReducer.actions

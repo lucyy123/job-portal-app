@@ -7,9 +7,24 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setSearchQuery } from "../redux/reducers/jobs";
 
 const HeroSection = () => {
+  const [input,setInput] = useState('')
   const theme = useTheme();
+  const navigate = useNavigate()
+  const dispatch = useDispatch();
+
+
+
+  const handleQuery = () => {
+    dispatch(setSearchQuery(input));
+    navigate("/browse")
+  };
+
   return (
     <Container>
       <Stack spacing={"1rem"} my={"1rem"} alignItems="center">
@@ -69,6 +84,8 @@ const HeroSection = () => {
                 padding: "1rem",
                 borderRadius: "inherit",
               }}
+              value={input}
+              onChange={(e)=>setInput(e.target.value)}
               placeholder="Find Your Dream Job..."
             />
           </Paper>
@@ -77,7 +94,8 @@ const HeroSection = () => {
             sx={{
               borderRadius: "0 25px 25px 0",
             }}
-          >
+         onClick={handleQuery}
+         >
             <Search></Search>
           </Button>
         </Stack>

@@ -1,11 +1,11 @@
-import { Edit, People } from "@mui/icons-material";
+import { People } from "@mui/icons-material";
 import {
-    Box,
-    Button,
-    Container,
-    Stack,
-    TextField,
-    Typography,
+  Box,
+  Button,
+  Container,
+  Stack,
+  TextField,
+  Typography,
 } from "@mui/material";
 import { GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
@@ -13,12 +13,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../../components/Loader";
 import TableComponent from "../../../components/Table";
-import useGetAllAdminJobs from "../../../hooks/useGetAllJobs";
-import { useLazyGetJobByItsidQuery } from "../../../redux/api/jobsApi";
-import { adminSingleJob } from "../../../redux/reducers/jobs";
+import useGetAllAdminJobs from "../../../hooks/useGetAllAdminJobs";
 import {
-    JobReducerInitialState,
-    TableAdminRowsType
+  JobReducerInitialState,
+  TableAdminRowsType
 } from "../../../vite-env";
 
 const Jobs = () => {
@@ -30,35 +28,14 @@ const Jobs = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const dispacth = useDispatch();
-  const [fetchData] = useLazyGetJobByItsidQuery();
 
-  const handleEdit = async (id: string) => {
-    try {
-      const res = await fetchData(id).unwrap();
-      if (res.success) {
-        dispacth(adminSingleJob(res.job));
-        navigate(`/admin/jobs/${id}`);
-      }
-    } catch (error) {
-      console.log("error:", error);
-    }
-  };
+  
   //*---------------------------------- Table Columns---------------------------
   const tableColumns: GridColDef[] = [
     {
       field: "company",
       headerName: "Company",
       width: 100,
-
-      // renderCell: (params) => (
-      //   <Box>
-      //     <img
-      //       src={params.value}
-      //       alt="company_name"
-      //       style={{ width: 50, height: 50 }}
-      //     />
-      //   </Box>
-      // ),
     },
     { field: "role", headerName: "Job Role", flex: 1 },
     { field: "date", headerName: "Created At", flex: 1 },
@@ -69,12 +46,7 @@ const Jobs = () => {
       type: "actions",
       width: 80,
       getActions: (params) => [
-        <GridActionsCellItem
-        icon={<Edit />}
-        label="Edit"
-        showInMenu
-        onClick={() => handleEdit(params.id as string)}
-        />,
+    
         <GridActionsCellItem icon={<People />} label="Applicants" showInMenu  onClick={()=>navigate(`/admin/jobs/${params.id}/applicants`)}/>,
       ],
     },

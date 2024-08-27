@@ -7,9 +7,27 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { setSearchQuery } from "../redux/reducers/jobs";
 import { filteOption } from "../utils/constants";
 
 const Sidebar = () => {
+  const [filterValue, setFilterValue] = useState("");
+
+  const dispatch = useDispatch()
+  useEffect(() => {
+    
+ if(filterValue == "All"){
+  dispatch(setSearchQuery(""))
+ }else{
+
+   dispatch(setSearchQuery(
+     filterValue))
+    }
+
+  }, [filterValue,dispatch]);
+
   return (
     <Stack
       sx={{
@@ -26,30 +44,39 @@ const Sidebar = () => {
           {" "}
           Filter Jobs
         </Typography>
-        {  filteOption.map((ele,idx)=><FormControl key={idx}>
-              <RadioGroup>
-               <Typography
+          <FormControl >
+            <RadioGroup  onChange={(e) => setFilterValue(e.target.value)}>
+
+              {filteOption.map ((ele,idx)=>
+              <Stack key={idx}>
+                <Typography
              
-                  mt={"1rem"}
-                  variant="h4"
-                  fontWeight={"bold"}
-                  fontSize={"1.2rem"}
+                mt={"1rem"}
+                variant="h4"
+                fontWeight={"bold"}
+                fontSize={"1.2rem"}
+              >
+               {ele.filterType}
+              </Typography>
+              {ele.filters.map((ele,index)=> <FormControlLabel
+              key={`r${idx}-index${index}`}
+                  control={<Radio />}
+                  value={ele}
+                  label={ele}
                 >
-                  {ele.filterType}
-                </Typography>
-                {ele.filters.map((ele,index) => (
-                  <FormControlLabel
-                  key={`${index}-${idx}`}
-                    control={<Radio />}
-                    value={ele}
-                    label={ele}
-                  ></FormControlLabel>
-                ))}
+                
+                </FormControlLabel>)}
+              
+              </Stack>)}
             
-          
-          </RadioGroup>
-        </FormControl>  ) }
-       
+              
+            </RadioGroup>
+          </FormControl>
+
+
+
+
+
       </Paper>
     </Stack>
   );

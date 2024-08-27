@@ -5,15 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { useGetJobsQuery } from "./redux/api/jobsApi";
 import { getAllJobs, noJobs } from "./redux/reducers/jobs";
-import {
-  JobReducerInitialState,
-  UserReducerInitialState,
-} from "./vite-env";
+import { JobReducerInitialState, UserReducerInitialState } from "./vite-env";
 
 //!------------------- NORMAL IMPORTS--------------------------
 import Header from "./components/Header";
 import Loader from "./components/Loader";
 import { setAuthToken } from "./redux/reducers/token";
+import Pr̥otectedRoute from "./utils/protectedRoutes";
 
 //*------------------------------ LAZY IMPORTS --------------------------
 
@@ -28,26 +26,25 @@ const JobDiscription = lazy(() => import("./pages/JobDiscription"));
 //*------------------------------admin components-------------------
 
 const Companies = lazy(() => import("./pages/admin/companies/Companies"));
-const CompanyCreate = lazy(()=>import("./pages/admin/companies/CreateNewCompany"))
-const Company = lazy(()=>import ("./pages/admin/companies/Comapany"))
-const AdminJobs= lazy(()=>import("./pages/admin/jobs/Jobs"))
-const CreateJob = lazy(()=>import('./pages/admin/jobs/CreateJob'))
-const Applicants = lazy(()=>import("./pages/admin/applicants/applicants"))
-
-
+const CompanyCreate = lazy(
+  () => import("./pages/admin/companies/CreateNewCompany")
+);
+const Company = lazy(() => import("./pages/admin/companies/Comapany"));
+const AdminJobs = lazy(() => import("./pages/admin/jobs/Jobs"));
+const CreateJob = lazy(() => import("./pages/admin/jobs/CreateJob"));
+const Applicants = lazy(() => import("./pages/admin/applicants/applicants"));
 
 const App = () => {
   const dispatch = useDispatch();
-  const { jobs, loading } = useSelector(
+
+  const { loading } = useSelector(
     (state: { jobs: JobReducerInitialState }) => state.jobs
   );
   const { user } = useSelector(
     (state: { user: UserReducerInitialState }) => state.user
   );
 
-
   const { refetch: getJobs } = useGetJobsQuery("");
-
 
   useEffect(() => {
     //*--------------------------------fETCHING THE ALL JOBS------------------------------------
@@ -72,8 +69,7 @@ const App = () => {
       }
     };
     handletoGetJobs();
-
-  }, [dispatch,user,getJobs]);
+  }, [dispatch, user, getJobs]);
 
   return loading ? (
     <Loader></Loader>
@@ -83,34 +79,46 @@ const App = () => {
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
+          //*------------------------- not logged in user routes
+          -------------------------------------
+          <Route
+            path="/signup"
+            element={
+              <Pr̥otectedRoute isAuthenticated={user ? false : true}>
+                <SignUp />
+              </Pr̥otectedRoute>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <Pr̥otectedRoute isAuthenticated={user ? false : true}>
+                <Login />
+              </Pr̥otectedRoute>
+            }
+          />
           //*------------------ Protected routes --------------------
-          <Route path="/jobs" element={<Jobs jobs={jobs} />} />
-          <Route path="/browse" element={<Browse />} />
-          <Route path="/viewProfile" element={<ViewProfile />} />
-          <Route path="/job/:id" element={<JobDiscription />} />
-          //!----------------------- Admin Routes------------------------------------
           <Route
-            path="/admin/companies"
-            element={<Companies/>}
-          />
+            element={<Pr̥otectedRoute isAuthenticated={user ? true : false} />}>
+            <Route path="/jobs" element={<Jobs />} />
+            <Route path="/browse" element={<Browse />} />
+            <Route path="/viewProfile" element={<ViewProfile />} />
+            <Route path="/job/:id" element={<JobDiscription />} />
+          </Route>
+          //!----------------------- Admin only Routes------------------------------------------------------------
+          <Route element ={ <Pr̥otectedRoute isAuthenticated = {user? true :false} adminOnly={true} admin ={user?.role =='recruiter'?true:false} />}>
 
-          <Route  path="/admin/companies/create" element ={<CompanyCreate/>}/>
-
-          <Route
-            path="/admin/companies/:id"
-            element={<Company/>}
-          />
-
-          <Route path="admin/jobs"  element={<AdminJobs/>} />
-          <Route path = "/admin/job/create" element ={<CreateJob/>}/>
-<Route path="/admin/jobs/:id/applicants" element={<Applicants/>} />
-
-
+          
+          <Route path="/admin/companies" element={<Companies />} />
+          <Route path="/admin/companies/create" element={<CompanyCreate />} />
+          <Route path="/admin/companies/:id" element={<Company />} />
+          <Route path="admin/jobs" element={<AdminJobs />} />
+          <Route path="/admin/job/create" element={<CreateJob />} />
+          <Route path="/admin/jobs/:id/applicants" element={<Applicants />} />
+          </Route>
         </Routes>
       </Suspense>
-      <Toaster position="bottom-right"  />
+      <Toaster position="bottom-right" />
     </Router>
   );
 };

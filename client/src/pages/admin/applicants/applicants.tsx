@@ -92,7 +92,7 @@ const Applicants = () => {
       flex: 1,
       renderCell: (params) => (
         <Button
-          variant="outlined"
+          variant="contained"
           sx={{
             borderRadius:"25px",
             textTransform:"none"
