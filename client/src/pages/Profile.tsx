@@ -17,58 +17,50 @@ import { Link } from "react-router-dom";
 import JobEditDialog from "../components/JobEditDialog";
 import Loader from "../components/Loader";
 import TableComponent from "../components/Table";
-import { AppliedJobsTableRowType, UserReducerInitialState } from "../vite-env";
+import useGetAllAppliedJobs from "../hooks/useGetAllAppliedJobs";
+import {
+  ApplicationsReducerInitialState,
+  AppliedJobTableRow,
+  UserReducerInitialState,
+} from "../vite-env";
 const Profile = () => {
+  useGetAllAppliedJobs();
 
-  const [isOpen,setIsOpen]=useState<boolean>(false)
-const {user,loading} = useSelector((state:{user:UserReducerInitialState})=>state.user)
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { user, loading } = useSelector(
+    (state: { user: UserReducerInitialState }) => state.user
+  );
 
+  const { applieadJobs } = useSelector(
+    (state: { applicationsReducer: ApplicationsReducerInitialState }) =>
+      state.applicationsReducer
+  );
 
-  const rows: AppliedJobsTableRowType[] = [
-    {
-      id: 1,
-      date: "26-11-2024",
-      jobRole: "Fronend Developer",
-      company: "Google",
-      status: "Accepted",
-    },
-    {
-      id: 2,
-      date: "26-11-2024",
-      jobRole: "Backend Developer",
-      company: "Microsoft",
-      status: "Rejected",
-    },
-    {
-      id: 3,
-      date: "26-11-2024",
-      jobRole: "Full Stack Developer",
-      company: "Asus",
-      status: "Accepted",
-    },
-    {
-      id: 4,
-      date: "26-11-2024",
-      jobRole: "Software  Developer",
-      company: "Asus",
-      status: "Rejected",
-    },
-  ];
+  //*------------------------------------ ROWS------------------------------------------
+  const rows = applieadJobs?.map((ele) => ({
+    id: ele.job?._id,
+    jobRole: ele.job?.title,
+    date: String(ele.createdAt.split("T")[0]),
+    company: ele.job?.company.name,
+    status: ele.status,
+  }));
 
+  //*-------------------------------------- COLUMNS--------------------------------
   const columns: GridColDef[] = [
-    { field: "date", headerName: "Date", width: 100, flex: 1 },
+    { field: "date", headerName: "Apply On", width: 100, flex: 1 },
     { field: "jobRole", headerName: "Job Role", width: 70, flex: 1 },
     { field: "company", headerName: "Company", width: 70, flex: 1 },
+
     {
       field: "status",
       headerName: "Status",
-      width: 70,
+      // width: 70,
       flex: 1,
       renderCell: (params) => {
         return (
           <Button
             variant="contained"
-            color={params.value == "Accepted" ? "success" : "error"}
+            color={params.value == "accepted" ? "success" : "error"}
             sx={{
               textTransform: "none",
               fontSize: "0.7rem",
@@ -82,7 +74,7 @@ const {user,loading} = useSelector((state:{user:UserReducerInitialState})=>state
     },
   ];
 
-  loading &&  <Loader></Loader>
+  loading && <Loader></Loader>;
 
   return (
     <Container
@@ -144,7 +136,7 @@ const {user,loading} = useSelector((state:{user:UserReducerInitialState})=>state
                 }}
               >
                 {" "}
-               {user?.bio}
+                {user?.bio}
               </Typography>
             </Stack>
           </Box>
@@ -154,17 +146,15 @@ const {user,loading} = useSelector((state:{user:UserReducerInitialState})=>state
             display={"flex"}
             justifyContent={"center"}
             alignItems={"start"}
-            
           >
-            <IconButton onClick={()=>setIsOpen((pre)=>!pre)}>
-
-            <EditOutlinedIcon 
-              sx={{
-                width: "2.3rem",
-                height: "2.3rem",
-              }}
+            <IconButton onClick={() => setIsOpen((pre) => !pre)}>
+              <EditOutlinedIcon
+                sx={{
+                  width: "2.3rem",
+                  height: "2.3rem",
+                }}
               ></EditOutlinedIcon>
-              </IconButton>
+            </IconButton>
           </Box>
         </Stack>
 
@@ -172,11 +162,13 @@ const {user,loading} = useSelector((state:{user:UserReducerInitialState})=>state
         <Box marginTop={"1rem"}>
           <Stack direction={"row"} alignItems={"center"} gap={"0.6rem"}>
             {" "}
-            <EmailOutlined></EmailOutlined>{user?.email}
+            <EmailOutlined></EmailOutlined>
+            {user?.email}
           </Stack>
           <Stack direction={"row"} alignItems={"center"} gap={"0.6rem"} mt={1}>
             {" "}
-            <Call></Call>{user?.phoneNumber}
+            <Call></Call>
+            {user?.phoneNumber}
           </Stack>
         </Box>
 
@@ -185,12 +177,12 @@ const {user,loading} = useSelector((state:{user:UserReducerInitialState})=>state
         <Box>
           <Typography variant="subtitle2" fontWeight={"bold"}>
             {" "}
-            Skills {" "}
+            Skills{" "}
           </Typography>
           <Stack direction={"row"} gap={"0.3rem"} marginTop={"0.6rem"}>
-            {user?.skills?.map((ele,idx) => (
+            {user?.skills?.map((ele, idx) => (
               <Button
-              key={idx}
+                key={idx}
                 variant="contained"
                 sx={{
                   textTransform: "none",
@@ -228,17 +220,23 @@ const {user,loading} = useSelector((state:{user:UserReducerInitialState})=>state
           {" "}
           Applied Jobs{" "}
         </Typography>
-        <Box>
-          <TableComponent<AppliedJobsTableRowType>
-
-            rows={rows}
-            columns={columns}
-            height="15rem"
-            widgth="100%"
-          />
-        </Box>
+        {applieadJobs && applieadJobs.length > 0 ? (
+          <Box>
+            <TableComponent<AppliedJobTableRow>
+              rows={rows!}
+              columns={columns}
+              height="15rem"
+              widgth="100%"
+            />
+          </Box>
+        ) : (
+          <Typography variant="subtitle2">
+            {" "}
+            You have not applied to any job{" "}
+          </Typography>
+        )}
       </Box>
-      <JobEditDialog isOpen={isOpen} handleOpen={setIsOpen}/>
+      <JobEditDialog isOpen={isOpen} handleOpen={setIsOpen} />
     </Container>
   );
 };

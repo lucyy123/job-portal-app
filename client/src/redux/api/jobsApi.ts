@@ -35,9 +35,16 @@ export const jobs = createApi({
         body:job,
         url:'/create/new'
       })
+    }),
+
+    getJobsByQuery:builder.query <JobsResponseMessage, string>({
+      query:(query)=>`/all/jobs?search=${query}` 
     })
+
+
+
 
   }),
 });
 
-export const { useGetJobsQuery, useGetSingleJobQuery, useLazyGetAdminJobsQuery, useLazyGetJobByItsidQuery,usePostJobMutation } = jobs
+export const { useLazyGetJobsByQueryQuery ,  useGetJobsQuery, useGetSingleJobQuery, useLazyGetAdminJobsQuery, useLazyGetJobByItsidQuery,usePostJobMutation } = jobs

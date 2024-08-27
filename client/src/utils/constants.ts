@@ -30,11 +30,11 @@ export const carouselContent = [
 export const filteOption: FilterOptionsType[] = [
   {
     filterType: "Location",
-    filters: ["Pune", "Mumbai", "Delhi NCR", "Hydrabad", "Baglore", "Nagour"],
+    filters: ["All", "Pune", "Mumbai", "Delhi NCR", "Hydrabad", "Banglore", "Nagour"],
   },
   {
-    filterType: "Industry",
-    filters: ["IT", "Finance", "Banking", "Healthcare", "Education"],
+    filterType: "Role",
+    filters: ["FrontEnd Developer", "Backend Developer", "FullStack Developer", "NodeJs Developer", "Web Developer"],
   },
   {
     filterType: "Salary",

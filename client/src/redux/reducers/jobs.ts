@@ -6,7 +6,8 @@ const initialState: JobReducerInitialState = {
   loading: true,
   getJob: null,
   adminJobs: null,
-  adminSingleJob: null
+  adminSingleJob: null,
+  searchQuery:null
 
 };
 
@@ -44,10 +45,14 @@ export const jobsReducer = createSlice({
     adminSingleJob: (state, action: PayloadAction<Jobs>) => {
       state.adminSingleJob = action.payload;
       state.loading = false
+    },
+
+    setSearchQuery : (state,action:PayloadAction<string>)=>{
+state.searchQuery = action.payload
     }
 
 
   },
 });
 
-export const { getAllJobs, noJobs, singleJob, noSingleJob, adminJobs, adminSingleJob } = jobsReducer.actions
+export const { getAllJobs, noJobs, singleJob, noSingleJob, adminJobs, adminSingleJob,setSearchQuery } = jobsReducer.actions

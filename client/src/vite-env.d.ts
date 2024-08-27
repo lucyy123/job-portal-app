@@ -132,6 +132,7 @@ export type JobReducerInitialState ={
   getJob: Jobs | null
   adminJobs:Jobs[] | null
   adminSingleJob:Jobs |null
+  searchQuery:string | null
 }
 
 export type JobsResponseMessage ={
@@ -278,6 +279,7 @@ export type getAllApplicantsOfJobResMessage = {
 export type ApplicationsReducerInitialState ={
   loading:boolean;
   applications: ApplicationsRes | null
+  applieadJobs: UserAppliedJobs[] | null
 }
 
 export type AdminApplicantsRow = {
@@ -303,4 +305,26 @@ data:{
   status:string
 }
 
+}
+
+export type  UserAppliedJobs ={
+  job: Jobs
+  applicants: string,
+  status:string,
+  createdAt: string ,
+  updatedAt: string ,
+}
+
+
+export type UserAppliedJobResMessage ={
+  success:boolean,
+  appliedJobs: UserAppliedJobs[]
+}
+
+export type AppliedJobTableRow = {
+  id: string;
+  jobRole: string;
+  date: string;
+  company: string;
+  status: string;
 }

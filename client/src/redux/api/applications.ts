@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery, } from "@reduxjs/toolkit/query/react";
+import { UserAppliedJobResMessage } from './../../vite-env.d';
 
 
 const base = `${import.meta.env.VITE_SERVER}/api/v1/applications`
@@ -24,8 +25,14 @@ export const applications = createApi({
     body:data ,
      url:`/status/${id}`}),
    }),
+   
+    appliedJobs:builder.query<UserAppliedJobResMessage,string> ({
+      query:()=>'/getAppliedJobs/user'
+    }),
+
+
   })
 
 });
 
-export const { useLazyApplynewJobQuery,useLazyApplicantsOfJobQuery,useUpdateApplicationMutation } = applications
+export const { useLazyAppliedJobsQuery, useLazyApplynewJobQuery,useLazyApplicantsOfJobQuery,useUpdateApplicationMutation} = applications

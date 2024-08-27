@@ -6,6 +6,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import { rupessConverter } from "../utils/constants";
 import { Jobs } from "../vite-env";
 
@@ -15,9 +16,12 @@ type Props={
 }
 
 const JobCard = ({job}:Props) => {
+
+const navigate = useNavigate()
+
   return (
-    <Box width={375} >
-      <Card variant="outlined" >
+    <Box width={375} onClick = {()=> navigate(`/job/${job._id}`) } >
+      <Card variant="outlined"  >
         <CardContent
           sx={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
         >
