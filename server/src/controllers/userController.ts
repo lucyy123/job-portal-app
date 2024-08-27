@@ -106,7 +106,7 @@ export const login = TryCatch(
             userId: loginUser._id,
         };
         const secretKey = process.env.SECRET_KEY!;
-        const token = jwt.sign(tokenData, secretKey, { expiresIn: "1d" });
+        const token = jwt.sign(tokenData, secretKey, { expiresIn: "1h" });
         const cookiesOptions = {maxAge: 86400};
 
         const user = {
@@ -125,7 +125,7 @@ export const login = TryCatch(
 
         res
             .status(200)
-            .cookie("token", token, { maxAge:86400 ,priority:"high",sameSite:"lax", httpOnly:true, path:"/"})
+            .cookie("token", token, { maxAge:86400 ,priority:"high",sameSite:"none", httpOnly:true, path:"/",secure:true})
             .json({
                 message: `Welcome ${loginUser.fullName}`,
                 success: true,
