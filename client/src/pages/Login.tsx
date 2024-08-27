@@ -89,7 +89,7 @@ const Login = () => {
             mb: "2rem",
           }}
         >
-          Sign Up
+          Login
         </Typography>
 
         <form onSubmit={handleSubmit}>
