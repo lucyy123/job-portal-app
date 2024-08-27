@@ -14,14 +14,14 @@ import { ChangeEvent, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import Loader from "../../components/Loader";
-import useGetSingleCompany from "../../hooks/useGetSingleCompany";
-import { useUpdateCompanyMutation } from "../../redux/api/companiesApi";
-import { SingleCompany } from "../../redux/reducers/companies";
+import Loader from "../../../components/Loader";
+import useGetSingleCompany from "../../../hooks/useGetSingleCompany";
+import { useUpdateCompanyMutation } from "../../../redux/api/companiesApi";
+import { SingleCompany } from "../../../redux/reducers/companies";
 import {
   ComapniesReducerInitialState,
   CreateCompanyRespone,
-} from "../../vite-env";
+} from "../../../vite-env";
 
 const Comapany = () => {
   const { id } = useParams();
