@@ -11,10 +11,10 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Loader from "../../components/Loader";
-import { useCreateCompanyMutation } from "../../redux/api/companiesApi";
-import { SingleCompany } from "../../redux/reducers/companies";
-import { CreateCompanyRespone } from "../../vite-env";
+import Loader from "../../../components/Loader";
+import { useCreateCompanyMutation } from "../../../redux/api/companiesApi";
+import { SingleCompany } from "../../../redux/reducers/companies";
+import { CreateCompanyRespone } from '../../../vite-env';
 
 const CreateNewCompany = () => {
   const navigate = useNavigate();

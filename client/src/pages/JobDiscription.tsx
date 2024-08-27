@@ -78,7 +78,8 @@ const JobDiscription = () => {
         toast.success(res?.message);
         // //-------------------- refetching the job again--------------------------
         
-        }
+      }
+      toast.success("Job Applied Successfully")
         const response = await job();
         if (response.data?.success) {
             dispatch(singleJob(response.data?.job));
